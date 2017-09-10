@@ -1,0 +1,39 @@
+{
+    "name": "zablose/captcha",
+    "description": "Captcha for Laravel 5.5",
+    "keywords": [
+        "captcha",
+        "laravel"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergejs Zablockis",
+            "email": "zablose@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~7.1",
+        "ext-gd": "*",
+        "illuminate/hashing": "~5.5",
+        "illuminate/support": "~5.5",
+        "intervention/image": "~2.4"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Zablose\\Captcha\\": ""
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zablose\\Captcha\\CaptchaServiceProvider"
+            ]
+        }
+    }
+}
