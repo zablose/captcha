@@ -2,11 +2,11 @@
 
 namespace Zablose\Captcha;
 
-use Illuminate\Hashing\BcryptHasher;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\Session\Session;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
-use Illuminate\Session\Store;
 
 class Captcha
 {
@@ -14,24 +14,19 @@ class Captcha
     const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
 
     /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var ImageManager
-     */
-    protected $image_manager;
-
-    /**
-     * @var Store
+     * @var Session
      */
     protected $session;
 
     /**
-     * @var BcryptHasher
+     * @var Repository
      */
-    protected $hasher;
+    protected $config_repository;
+
+    /**
+     * @var Config
+     */
+    protected $config;
 
     /**
      * @var Image
@@ -51,23 +46,16 @@ class Captcha
     /**
      * Captcha constructor.
      *
-     * @param ImageManager $imageManager
-     * @param Store        $session
-     * @param BcryptHasher $hasher
+     * @param Session    $session
+     * @param Repository $repository
      */
     public function __construct(
-        ImageManager $imageManager,
-        Store $session,
-        BcryptHasher $hasher
+        Session $session,
+        Repository $repository
     )
     {
-        $this->image_manager = $imageManager;
-        $this->session       = $session;
-        $this->hasher        = $hasher;
-
-        $this->config      = new Config();
-        $this->backgrounds = $this->getBackgrounds();
-        $this->fonts       = $this->getFonts();
+        $this->session           = $session;
+        $this->config_repository = $repository;
     }
 
     /**
@@ -80,7 +68,7 @@ class Captcha
     public function create($config_name = 'default')
     {
         return $this
-            ->configure($config_name)
+            ->configure($config_name)->backgrounds()->fonts()
             ->image()->contrast()->text()->lines()->sharpen()->invert()->blur()
             ->response();
     }
@@ -104,10 +92,7 @@ class Captcha
 
         $this->session->remove('captcha');
 
-        return $this->hasher->check(
-            $sensitive ? $value : strtolower($value),
-            $key
-        );
+        return password_verify($sensitive ? $value : strtolower($value), $key);
     }
 
     /**
@@ -131,7 +116,7 @@ class Captcha
      */
     private function configure($config_name)
     {
-        $this->config->apply($config_name);
+        $this->config = (new Config())->apply($this->config_repository->get('captcha.' . $config_name, []));
 
         return $this;
     }
@@ -143,12 +128,14 @@ class Captcha
      */
     private function image()
     {
+        $image_manager = new ImageManager();
+
         $this->image = $this->config->use_background_image
-            ? $this->image_manager->make($this->background())->resize(
+            ? $image_manager->make($this->background())->resize(
                 $this->config->width,
                 $this->config->height
             )
-            : $this->image_manager->canvas(
+            : $image_manager->canvas(
                 $this->config->width,
                 $this->config->height,
                 $this->config->background_color
@@ -238,7 +225,7 @@ class Captcha
 
         $this->session->put('captcha', [
             'sensitive' => $this->config->sensitive,
-            'key'       => $this->hasher->make($this->config->sensitive ? $captcha : strtolower($captcha)),
+            'key'       => password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT),
         ]);
 
         return $this;
@@ -329,19 +316,27 @@ class Captcha
     }
 
     /**
-     * @return string[]
+     * Load backgrounds.
+     *
+     * @return $this
      */
-    private function getBackgrounds()
+    private function backgrounds()
     {
-        return $this->getFiles($this->config->assets_dir . 'backgrounds', '.png');
+        $this->backgrounds = $this->getFiles($this->config->assets_dir . 'backgrounds', '.png');
+
+        return $this;
     }
 
     /**
-     * @return string[]
+     * Load fonts.
+     *
+     * @return $this
      */
-    private function getFonts()
+    private function fonts()
     {
-        return $this->getFiles($this->config->assets_dir . 'fonts', '.ttf');
+        $this->fonts = $this->getFiles($this->config->assets_dir . 'fonts', '.ttf');
+
+        return $this;
     }
 
     /**

@@ -2,9 +2,8 @@
 
 return [
 
-
     'default' => [
-        'assets_dir'           => __DIR__ . '/../assets/',
+        'assets_dir'           => __DIR__ . '/../vendor/zablose/captcha/assets/',
         'characters'           => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}',
         'length'               => 5,
         'width'                => 160,

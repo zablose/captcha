@@ -96,13 +96,13 @@ class Config
     private $angle = 15;
 
     /**
-     * @param string $config_name
+     * @param array $config
      *
      * @return $this
      */
-    public function apply($config_name)
+    public function apply($config)
     {
-        foreach (config('captcha.' . $config_name, []) as $key => $value)
+        foreach ($config as $key => $value)
         {
             if (property_exists($this, $key))
             {
@@ -140,6 +140,6 @@ class Config
      */
     public function size()
     {
-        return mt_rand((int)$this->height * 0.85, (int)$this->height * 0.95);
+        return mt_rand((int) $this->height * 0.85, (int) $this->height * 0.95);
     }
 }
