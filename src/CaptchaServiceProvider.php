@@ -23,13 +23,17 @@ class CaptchaServiceProvider extends ServiceProvider
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
-        $validator->extend('captcha', function ($attribute, $value, $parameters)
-        {
-            /** @var Captcha $captcha */
-            $captcha = $this->app['captcha'];
+        $validator->extend(
+            'captcha',
+            function ($attribute, $value, $parameters)
+            {
+                /** @var Captcha $captcha */
+                $captcha = $this->app['captcha'];
 
-            return $captcha->check($value);
-        });
+                return $captcha->check($value);
+            },
+            'The :attribute does not match.'
+        );
     }
 
     /**
