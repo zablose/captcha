@@ -1,8 +1,8 @@
-# Captcha for Laravel ~5.5 and PHP ~7.1
+# Captcha for PHP ~7.1
 
 > Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
 
-## Usage
+## Usage with Laravel
 
 Install package: `composer require zablose/captcha`.
 

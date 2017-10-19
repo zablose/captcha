@@ -15,21 +15,14 @@
     "require": {
         "php": "~7.1",
         "ext-gd": "*",
-        "intervention/image": "~2.4",
-        "illuminate/contracts": "~5.5",
-        "illuminate/config": "~5.5",
-        "illuminate/session": "~5.5",
-        "illuminate/support": "~5.5"
+        "intervention/image": "~2.4"
     },
     "require-dev": {
     },
     "autoload": {
         "psr-4": {
             "Zablose\\Captcha\\": ""
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+        }
     },
     "extra": {
         "laravel": {

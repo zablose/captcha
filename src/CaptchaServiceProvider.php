@@ -2,10 +2,9 @@
 
 namespace Zablose\Captcha;
 
-use Illuminate\Config\Repository;
-use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Session;
 
 class CaptchaServiceProvider extends ServiceProvider
 {
@@ -27,27 +26,25 @@ class CaptchaServiceProvider extends ServiceProvider
             'captcha',
             function ($attribute, $value, $parameters)
             {
-                /** @var Captcha $captcha */
-                $captcha = $this->app['captcha'];
+                return function () use ($value)
+                {
+                    if (! Session::has('captcha'))
+                    {
+                        return false;
+                    }
 
-                return $captcha->check($value);
+                    $sensitive = Session::get('captcha.sensitive');
+                    $key       = Session::get('captcha.key');
+
+                    Session::remove('captcha');
+
+                    return password_verify($sensitive ? $value : strtolower($value), $key);
+                };
             },
             'The :attribute does not match.'
         );
-    }
 
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        $this->app->bind('captcha', function ($app)
-        {
-            return new Captcha(
-                $app[Store::class],
-                $app[Repository::class]
-            );
-        });
+        require_once __DIR__ . '/helpers.php';
     }
 
 }

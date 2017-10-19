@@ -2,26 +2,12 @@
 
 namespace Zablose\Captcha;
 
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Session\Session;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 class Captcha
 {
-
-    const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
-
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var Repository
-     */
-    protected $config_repository;
 
     /**
      * @var Config
@@ -44,79 +30,63 @@ class Captcha
     protected $fonts = [];
 
     /**
-     * Captcha constructor.
-     *
-     * @param Session    $session
-     * @param Repository $repository
+     * @var string
      */
-    public function __construct(
-        Session $session,
-        Repository $repository
-    )
-    {
-        $this->session           = $session;
-        $this->config_repository = $repository;
-    }
+    protected $text;
+
+    /**
+     * @var string
+     */
+    protected $key;
 
     /**
      * Create captcha image
      *
-     * @param string $config_name
+     * @param array $config
      *
-     * @return mixed
+     * @return $this
      */
-    public function create($config_name = 'default')
+    public function create($config)
     {
         return $this
-            ->configure($config_name)->backgrounds()->fonts()
-            ->image()->contrast()->text()->lines()->sharpen()->invert()->blur()
-            ->response();
+            ->configure($config)->backgrounds()->fonts()
+            ->image()->contrast()->generate()->lines()->sharpen()->invert()->blur();
     }
 
     /**
-     * Captcha check
-     *
-     * @param string $value
-     *
      * @return bool
      */
-    public function check($value)
+    public function sensitive()
     {
-        if (! $this->session->has('captcha'))
-        {
-            return false;
-        }
-
-        $sensitive = $this->session->get('captcha.sensitive');
-        $key       = $this->session->get('captcha.key');
-
-        $this->session->remove('captcha');
-
-        return password_verify($sensitive ? $value : strtolower($value), $key);
+        return $this->config->sensitive;
     }
 
     /**
-     * Generate url of the captcha image source.
-     *
-     * @param string $config_name
-     *
      * @return string
      */
-    public function url($config_name = 'default')
+    public function key()
     {
-        return url('captcha/' . $config_name) . '?' . $this->getRandomString(12);
+        return $this->key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function png()
+    {
+        return $this->image->response('png', $this->config->quality);
     }
 
     /**
      * Apply configuration from the file, if present.
      *
-     * @param string $config_name
+     * @param array $config
      *
      * @return $this
      */
-    private function configure($config_name)
+    private function configure($config)
     {
-        $this->config = (new Config())->apply($this->config_repository->get('captcha.' . $config_name, []));
+        $this->config = (new Config())->apply($config);
 
         return $this;
     }
@@ -192,41 +162,6 @@ class Captcha
         {
             $this->image->blur($this->config->blur);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    private function response()
-    {
-        return $this->image->response('png', $this->config->quality);
-    }
-
-    /**
-     * Generate random text, than add it to the image and session.
-     *
-     * @return $this
-     */
-    private function text()
-    {
-        $margin_left = (int) $this->config->width / $this->config->length * 0.02;
-        $width       = $this->config->width / $this->config->length;
-
-        $captcha = '';
-        for ($i = 0; $i < $this->config->length; $i++)
-        {
-            $char = $this->getRandomChar($this->config->characters);
-            $this->char($char, $margin_left);
-            $margin_left += (int) $width * mt_rand(90, 100) / 100;
-            $captcha     .= $char;
-        }
-
-        $this->session->put('captcha', [
-            'sensitive' => $this->config->sensitive,
-            'key'       => password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT),
-        ]);
 
         return $this;
     }
@@ -363,31 +298,27 @@ class Captcha
     }
 
     /**
-     * @param int    $length
-     * @param string $characters
-     *
-     * @return string
+     * @return $this
      */
-    private function getRandomString($length, $characters = Captcha::CHARACTERS)
+    private function generate()
     {
-        $string = '';
+        $margin_left = (int) $this->config->width / $this->config->length * 0.02;
+        $width       = $this->config->width / $this->config->length;
 
-        for ($i = 0; $i < $length; $i++)
+        $captcha = '';
+        for ($i = 0; $i < $this->config->length; $i++)
         {
-            $string .= $this->getRandomChar($characters);
+            $char = Random::char($this->config->characters);
+            $this->char($char, $margin_left);
+            $margin_left += (int) $width * mt_rand(90, 100) / 100;
+            $captcha     .= $char;
         }
 
-        return $string;
-    }
+        $this->text = $captcha;
 
-    /**
-     * @param string $characters
-     *
-     * @return string
-     */
-    private function getRandomChar($characters = Captcha::CHARACTERS)
-    {
-        return $characters[array_rand(str_split($characters))];
+        $this->key = password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT);
+
+        return $this;
     }
 
 }

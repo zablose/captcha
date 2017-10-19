@@ -11,6 +11,6 @@ if (! function_exists('captcha_src'))
      */
     function captcha_url($config_name = 'default')
     {
-        return app('captcha')->url($config_name);
+        return url('/captcha/' . $config_name) . '?' . \Zablose\Captcha\Random::string(12);
     }
 }

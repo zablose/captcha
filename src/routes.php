@@ -2,7 +2,15 @@
 
 use Zablose\Captcha\Captcha;
 
-Route::get('captcha/{config_name?}', function (Captcha $captcha, $config_name = 'default')
+Route::get('captcha/{config_name?}', function ($config_name = 'default')
 {
-    return $captcha->create($config_name);
-})->middleware('web');
+    $captcha = (new Captcha())->create(config('captcha.' . $config_name, []));
+
+    Session::put('captcha', [
+        'sensitive' => $captcha->sensitive(),
+        'key'       => $captcha->key(),
+    ]);
+
+    return $captcha->png();
+})
+    ->middleware('web');
