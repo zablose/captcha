@@ -72,6 +72,8 @@ Add validation rule to your controller, like in the code sample below:
 
 In case you are not happy Laravel user, you may still use this package.
 
+To create captcha, add details to the session and output the image, you may use code like:
+
 ```php
 <?php
 
@@ -85,8 +87,23 @@ $captcha = (new Captcha())
         'width'  => 320,
 ]);
 
+$data = [
+    'captcha' => [
+            'sensitive' => $captcha->sensitive(),
+            'hash'      => $captcha->hash(),
+        ]
+];
+
+// TODO: Add $data to the session.
+
 echo $captcha->png();
 
+```
+
+To check captcha use:
+
+```php
+Captcha::check($sensitive, $captcha, $hash);
 ```
 
 Feel the joy and happiness!

@@ -8,7 +8,7 @@ Route::get('/captcha/{type}/{random_string?}', function ($type = 'default')
 
     Session::put('captcha', [
         'sensitive' => $captcha->sensitive(),
-        'key'       => $captcha->key(),
+        'hash'      => $captcha->hash(),
     ]);
 
     return $captcha->png();

@@ -32,11 +32,11 @@ class CaptchaServiceProvider extends ServiceProvider
                 }
 
                 $sensitive = Session::get('captcha.sensitive');
-                $key       = Session::get('captcha.key');
+                $hash      = Session::get('captcha.hash');
 
                 Session::remove('captcha');
 
-                return password_verify($sensitive ? $value : strtolower($value), $key);
+                return Captcha::check($sensitive, $value, $hash);
             },
             'The :attribute does not match.'
         );

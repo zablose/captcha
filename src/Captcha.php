@@ -37,7 +37,7 @@ class Captcha
     /**
      * @var string
      */
-    protected $key;
+    protected $hash;
 
     /**
      * Create captcha image
@@ -64,9 +64,9 @@ class Captcha
     /**
      * @return string
      */
-    public function key()
+    public function hash()
     {
-        return $this->key;
+        return $this->hash;
     }
 
     /**
@@ -316,9 +316,21 @@ class Captcha
 
         $this->text = $captcha;
 
-        $this->key = password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT);
+        $this->hash = password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT);
 
         return $this;
+    }
+
+    /**
+     * @param bool   $sensitive
+     * @param string $captcha
+     * @param string $hash
+     *
+     * @return bool
+     */
+    public static function check($sensitive, $captcha, $hash)
+    {
+        return password_verify($sensitive ? $captcha : strtolower($captcha), $hash);
     }
 
 }
