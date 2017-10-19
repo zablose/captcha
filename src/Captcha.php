@@ -46,7 +46,7 @@ class Captcha
      *
      * @return $this
      */
-    public function create($config)
+    public function create($config = [])
     {
         return $this
             ->configure($config)->backgrounds()->fonts()

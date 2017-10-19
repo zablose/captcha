@@ -2,9 +2,9 @@
 
 use Zablose\Captcha\Captcha;
 
-Route::get('captcha/{config_name?}', function ($config_name = 'default')
+Route::get('/captcha/{type}/{random_string?}', function ($type = 'default')
 {
-    $captcha = (new Captcha())->create(config('captcha.' . $config_name, []));
+    $captcha = (new Captcha())->create(config('captcha.' . $type, []));
 
     Session::put('captcha', [
         'sensitive' => $captcha->sensitive(),

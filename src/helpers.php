@@ -1,16 +1,16 @@
 <?php
 
-if (! function_exists('captcha_src'))
+if (! function_exists('captcha_url'))
 {
     /**
      * Generate url of the captcha image source.
      *
-     * @param string $config_name
+     * @param string $type
      *
      * @return string
      */
-    function captcha_url($config_name = 'default')
+    function captcha_url($type = 'default')
     {
-        return url('/captcha/' . $config_name) . '?' . \Zablose\Captcha\Random::string(12);
+        return url('/captcha/' . $type) . '/' . \Zablose\Captcha\Random::string(12);
     }
 }

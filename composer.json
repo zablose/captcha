@@ -1,6 +1,6 @@
 {
     "name": "zablose/captcha",
-    "description": "Captcha for Laravel 5.5",
+    "description": "Captcha for PHP ~7.1",
     "keywords": [
         "captcha",
         "laravel"

@@ -2,11 +2,15 @@
 
 > Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
 
+## Installation
+
+```
+composer require zablose/captcha
+```
+
 ## Usage with Laravel
 
-Install package: `composer require zablose/captcha`.
-
-Check that new route is working, by visiting '://localhost/captcha'
+Check that new route is working, by visiting '://localhost/captcha/default'
 
 You have to see a captcha image like one of these:
 
@@ -62,6 +66,27 @@ Add validation rule to your controller, like in the code sample below:
             'captcha'         => 'required|captcha',
         ]);
     }
+```
+
+## Basic Usage
+
+In case you are not happy Laravel user, you may still use this package.
+
+```php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Zablose\Captcha\Captcha;
+
+$captcha = (new Captcha())
+    ->create([
+        'invert' => true,
+        'width'  => 320,
+]);
+
+echo $captcha->png();
+
 ```
 
 Feel the joy and happiness!

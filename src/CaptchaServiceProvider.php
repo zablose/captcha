@@ -26,20 +26,17 @@ class CaptchaServiceProvider extends ServiceProvider
             'captcha',
             function ($attribute, $value, $parameters)
             {
-                return function () use ($value)
+                if (! Session::has('captcha'))
                 {
-                    if (! Session::has('captcha'))
-                    {
-                        return false;
-                    }
+                    return false;
+                }
 
-                    $sensitive = Session::get('captcha.sensitive');
-                    $key       = Session::get('captcha.key');
+                $sensitive = Session::get('captcha.sensitive');
+                $key       = Session::get('captcha.key');
 
-                    Session::remove('captcha');
+                Session::remove('captcha');
 
-                    return password_verify($sensitive ? $value : strtolower($value), $key);
-                };
+                return password_verify($sensitive ? $value : strtolower($value), $key);
             },
             'The :attribute does not match.'
         );
