@@ -62,6 +62,16 @@ class Captcha
     }
 
     /**
+     * Get Captcha as a string.
+     *
+     * @return string
+     */
+    public function txt()
+    {
+        return $this->text;
+    }
+
+    /**
      * @return string
      */
     public function hash()
