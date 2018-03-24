@@ -33,7 +33,7 @@ class Config
     /**
      * @var int
      */
-    public $quality = 70;
+    public $quality = 0;
 
     /**
      * @var int

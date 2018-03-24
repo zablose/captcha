@@ -2,10 +2,6 @@
 
 namespace Zablose\Captcha;
 
-use Intervention\Image\AbstractFont;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
-
 class Captcha
 {
 
@@ -79,12 +75,9 @@ class Captcha
         return $this->hash;
     }
 
-    /**
-     * @return mixed
-     */
     public function png()
     {
-        return $this->image->response('png', $this->config->quality);
+        $this->image->png($this->config->quality);
     }
 
     /**
@@ -108,14 +101,14 @@ class Captcha
      */
     private function image()
     {
-        $image_manager = new ImageManager();
+        $image = new Image();
 
         $this->image = $this->config->use_background_image
-            ? $image_manager->make($this->background())->resize(
+            ? $image->make($this->background())->resize(
                 $this->config->width,
                 $this->config->height
             )
-            : $image_manager->canvas(
+            : $image->canvas(
                 $this->config->width,
                 $this->config->height,
                 $this->config->background_color
@@ -189,14 +182,7 @@ class Captcha
         $size       = $this->config->size();
         $margin_top = mt_rand(1, (int) ($this->config->height - $size) * 1.25);
 
-        $this->image->text($char, $margin_left, $margin_top, function (AbstractFont $font) use ($size)
-        {
-            $font->file($this->font());
-            $font->size($size);
-            $font->color($this->config->color());
-            $font->valign('top');
-            $font->angle($this->config->angle());
-        });
+        $this->image->text($char, $margin_left, $this->config->height, $this->font(), $size, $this->config->color(), $this->config->angle());
 
         return $this;
     }
@@ -251,10 +237,7 @@ class Captcha
             mt_rand(0, $half_height),
             mt_rand($half_width, $this->config->width),
             mt_rand($half_height, $this->config->height),
-            function ($draw)
-            {
-                $draw->color($this->config->color());
-            }
+            $this->config->color()
         );
 
         return $this;

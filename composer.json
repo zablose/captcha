@@ -14,8 +14,7 @@
     ],
     "require": {
         "php": "~7.1",
-        "ext-gd": "*",
-        "intervention/image": "~2.4"
+        "ext-gd": "*"
     },
     "require-dev": {
     },
