@@ -28,6 +28,11 @@ class Captcha
     /**
      * @var string
      */
+    protected $font;
+
+    /**
+     * @var string
+     */
     protected $text;
 
     /**
@@ -75,9 +80,12 @@ class Captcha
         return $this->hash;
     }
 
+    /**
+     * @return string
+     */
     public function png()
     {
-        $this->image->png($this->config->quality);
+        return $this->image->png($this->config->quality);
     }
 
     /**
@@ -101,18 +109,11 @@ class Captcha
      */
     private function image()
     {
-        $image = new Image();
+        $image = (new Image())->setWidth($this->config->width)->setHeight($this->config->height);
 
         $this->image = $this->config->use_background_image
-            ? $image->make($this->background())->resize(
-                $this->config->width,
-                $this->config->height
-            )
-            : $image->canvas(
-                $this->config->width,
-                $this->config->height,
-                $this->config->background_color
-            );
+            ? $image->setPath($this->background())->make()
+            : $image->setBackgroundColor($this->config->background_color)->make();
 
         return $this;
     }
@@ -173,16 +174,23 @@ class Captcha
      * Add char to the image.
      *
      * @param string $char
-     * @param int    $margin_left
+     * @param int    $x
      *
      * @return $this
      */
-    private function char($char, $margin_left)
+    private function char($char, $x)
     {
-        $size       = $this->config->size();
-        $margin_top = mt_rand(1, (int) ($this->config->height - $size) * 1.25);
+        $this->config->randomizeSize();
 
-        $this->image->text($char, $margin_left, $this->config->height, $this->font(), $size, $this->config->color(), $this->config->angle());
+        $this->image->text(
+            $char,
+            $x + $this->getCharWidthMargin(),
+            $this->config->height - $this->getCharHeightMargin(),
+            $this->randomizeFont()->getFont(),
+            $this->config->getSize(),
+            $this->config->randomizeColor()->getColor(),
+            $this->config->randomizeAngle()->getAngle()
+        );
 
         return $this;
     }
@@ -198,13 +206,23 @@ class Captcha
     }
 
     /**
+     * @return $this
+     */
+    private function randomizeFont()
+    {
+        $this->font = $this->fonts[array_rand($this->fonts)];
+
+        return $this;
+    }
+
+    /**
      * Get random image font path from the list.
      *
      * @return string
      */
-    private function font()
+    private function getFont()
     {
-        return $this->fonts[array_rand($this->fonts)];
+        return $this->font;
     }
 
     /**
@@ -229,15 +247,12 @@ class Captcha
      */
     private function line()
     {
-        $half_width  = (int) $this->config->width / 2;
-        $half_height = (int) $this->config->height / 2;
-
         $this->image->line(
-            mt_rand(0, $half_width),
-            mt_rand(0, $half_height),
-            mt_rand($half_width, $this->config->width),
-            mt_rand($half_height, $this->config->height),
-            $this->config->color()
+            mt_rand(0, $this->config->width),
+            mt_rand(0, $this->config->height),
+            mt_rand(0, $this->config->width),
+            mt_rand(0, $this->config->height),
+            $this->config->randomizeColor()->getColor()
         );
 
         return $this;
@@ -295,16 +310,15 @@ class Captcha
      */
     private function generate()
     {
-        $margin_left = (int) $this->config->width / $this->config->length * 0.02;
-        $width       = $this->config->width / $this->config->length;
+        $x = 0;
 
         $captcha = '';
         for ($i = 0; $i < $this->config->length; $i++)
         {
             $char = Random::char($this->config->characters);
-            $this->char($char, $margin_left);
-            $margin_left += (int) $width * mt_rand(90, 100) / 100;
-            $captcha     .= $char;
+            $this->char($char, $x);
+            $x       += $this->getCharWidth();
+            $captcha .= $char;
         }
 
         $this->text = $captcha;
@@ -312,6 +326,23 @@ class Captcha
         $this->hash = password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT);
 
         return $this;
+    }
+
+    protected function getCharHeightMargin()
+    {
+        return mt_rand(0, $this->config->height - $this->config->getSize());
+    }
+
+    protected function getCharWidthMargin()
+    {
+        return $this->getCharWidth() > $this->config->getSize()
+            ? mt_rand(0, (int) ($this->getCharWidth() - $this->config->getSize()) / 2)
+            : 0;
+    }
+
+    protected function getCharWidth()
+    {
+        return (int) $this->config->width / $this->config->length;
     }
 
     /**

@@ -11,6 +11,6 @@ Route::get('/captcha/{type}/{random_string?}', function ($type = 'default')
         'hash'      => $captcha->hash(),
     ]);
 
-    return $captcha->png();
+    return Response::make($captcha->png())->header('Content-Type', 'image/png');
 })
     ->middleware('web');

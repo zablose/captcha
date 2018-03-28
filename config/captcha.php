@@ -8,7 +8,7 @@ return [
         'length'               => 5,
         'width'                => 160,
         'height'               => 60,
-        'quality'              => 70,
+        'quality'              => 9,
         'lines'                => 5,
         'use_background_image' => true,
         'background_color'     => '#FFFFFF',

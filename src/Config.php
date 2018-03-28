@@ -33,12 +33,12 @@ class Config
     /**
      * @var int
      */
-    public $quality = 0;
+    public $quality = 9;
 
     /**
      * @var int
      */
-    public $lines = 5;
+    public $lines = 10;
 
     /**
      * @var bool
@@ -93,7 +93,22 @@ class Config
     /**
      * @var int
      */
-    private $angle = 15;
+    public $angle = 45;
+
+    /**
+     * @var int
+     */
+    private $current_angle = 0;
+
+    /**
+     * @var int
+     */
+    private $size;
+
+    /**
+     * @var string
+     */
+    private $color;
 
     /**
      * @param array $config
@@ -114,32 +129,59 @@ class Config
     }
 
     /**
+     * @return $this
+     */
+    public function randomizeAngle()
+    {
+        $this->current_angle = mt_rand((-1 * $this->angle), $this->angle);
+
+        return $this;
+    }
+
+    /**
      * Get random angle based on angle.
      *
      * @return int
      */
-    public function angle()
+    public function getAngle()
     {
-        return mt_rand((-1 * $this->angle), $this->angle);
+        return $this->current_angle;
+    }
+
+    public function randomizeColor()
+    {
+        $this->color = $this->colors[array_rand($this->colors)];
+
+        return $this;
     }
 
     /**
      * Get random font color from the list.
      *
-     * @return array
+     * @return string
      */
-    public function color()
+    public function getColor()
     {
-        return $this->colors[array_rand($this->colors)];
+        return $this->color;
     }
 
     /**
      * Get random font size based on height.
      *
-     * @return integer
+     * @return $this
      */
-    public function size()
+    public function randomizeSize()
     {
-        return mt_rand((int) $this->height * 0.85, (int) $this->height * 0.95);
+        $this->size = mt_rand((int) $this->height * 0.75, (int) $this->height * 0.95);
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 }

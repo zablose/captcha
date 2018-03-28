@@ -5,50 +5,78 @@ namespace Zablose\Captcha;
 class Image
 {
 
-    protected $resource;
-    protected $width;
-    protected $height;
+    /**
+     * Image canvas.
+     *
+     * @var resource
+     */
+    protected $canvas;
 
-    public function make($path)
+    /**
+     * @var int
+     */
+    protected $width = 160;
+
+    /**
+     * @var int
+     */
+    protected $height = 60;
+
+    /**
+     * Path to the picture to load.
+     *
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * @var string
+     */
+    protected $background_color = '#ffffff';
+
+    /**
+     * @return $this
+     */
+    public function make()
     {
-        $resource = @imagecreatefrompng($path);
+        return $this->path ? $this->load()->resize() : $this->create();
+    }
 
-        $this->width  = imagesx($resource);
-        $this->height = imagesy($resource);
-
-        // new canvas
-        $canvas = imagecreatetruecolor($this->width, $this->height);
-
-        // fill with transparent color
-        imagealphablending($canvas, false);
-        $transparent = imagecolorallocatealpha($canvas, 255, 255, 255, 127);
-        imagefilledrectangle($canvas, 0, 0, $this->width, $this->height, $transparent);
-        imagecolortransparent($canvas, $transparent);
-        imagealphablending($canvas, true);
-
-        // copy original
-        imagecopy($canvas, $resource, 0, 0, 0, 0, $this->width, $this->height);
-        imagedestroy($resource);
-
-        $this->resource = $canvas;
+    /**
+     * @return $this
+     */
+    protected function load()
+    {
+        $this->canvas = @imagecreatefrompng($this->path);
 
         return $this;
     }
 
-    public function canvas($width, $height, $background = null)
+    /**
+     * @return $this
+     */
+    protected function create()
     {
-        $this->resource = imagecreatetruecolor($width, $height);
-
-        imagefill($this->resource, 0, 0, $this->getColor($background));
+        $this->canvas = @imagecreatetruecolor($this->width, $this->height);
+        imagefill($this->canvas, 0, 0, $this->getColor($this->background_color));
 
         return $this;
     }
 
-    public function resize($width, $height)
+    /**
+     * @return $this
+     */
+    public function resize()
     {
-        $image = imagecreatetruecolor($width, $height);
-        imagecopyresampled($image, $this->resource, 0, 0, 0, 0, $width, $height, $this->width, $this->height);
-        $this->resource = $image;
+        $width  = imagesx($this->canvas);
+        $height = imagesy($this->canvas);
+
+        if ($this->width !== $width || $this->height !== $width)
+        {
+            $dst_image = imagecreatetruecolor($this->width, $this->height);
+            imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
+            $this->canvas = $dst_image;
+        }
 
         return $this;
     }
@@ -60,7 +88,7 @@ class Image
      */
     public function contrast($level)
     {
-        imagefilter($this->resource, IMG_FILTER_CONTRAST, $level);
+        imagefilter($this->canvas, IMG_FILTER_CONTRAST, $level);
 
         return $this;
     }
@@ -83,14 +111,17 @@ class Image
             [$min, $max, $min],
         ];
 
-        imageconvolution($this->resource, $matrix, $div, 0);
+        imageconvolution($this->canvas, $matrix, $div, 0);
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function invert()
     {
-        imagefilter($this->resource, IMG_FILTER_NEGATE);
+        imagefilter($this->canvas, IMG_FILTER_NEGATE);
 
         return $this;
     }
@@ -104,41 +135,84 @@ class Image
     {
         for ($i = 0; $i < intval($amount); $i++)
         {
-            imagefilter($this->resource, IMG_FILTER_GAUSSIAN_BLUR);
+            imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
 
         return $this;
     }
 
+    /**
+     * @param string $text
+     * @param int    $x
+     * @param int    $y
+     * @param string $font
+     * @param int    $size
+     * @param int    $color
+     * @param int    $angle
+     *
+     * @return $this
+     */
     public function text($text, $x, $y, $font, $size, $color, $angle)
     {
-        imagettftext($this->resource, intval(ceil($size * 0.75)), $angle, $x, $y, $this->getColor($color), $font, $text);
+        $box = imagettfbbox($this->getFontPoints($size), $angle, $font, $text);
+
+        $mx = round(min($box[0], $box[6]));
+        $my = round(max($box[1], $box[3]));
+
+        $x = $x - $mx;
+        $y = $y - $my;
+
+        imagettftext($this->canvas, $this->getFontPoints($size), $angle, $x, $y, $this->getColor($color), $font, $text);
 
         return $this;
     }
 
+    /**
+     * @param int $size
+     *
+     * @return int
+     */
+    public function getFontPoints($size)
+    {
+        return intval(ceil($size * 0.75));
+    }
+
+    /**
+     * @param int $x1
+     * @param int $y1
+     * @param int $x2
+     * @param int $y2
+     * @param int $color
+     *
+     * @return $this
+     */
     public function line($x1, $y1, $x2, $y2, $color)
     {
-        imageline($this->resource, $x1, $y1, $x2, $y2, $this->getColor($color));
+        imageline($this->canvas, $x1, $y1, $x2, $y2, $this->getColor($color));
 
         return $this;
     }
 
+    /**
+     * @param int $quality
+     *
+     * @return string
+     */
     public function png($quality)
     {
         ob_start();
-        imagealphablending($this->resource, false);
-        imagesavealpha($this->resource, true);
-        imagepng($this->resource, null, $quality);
+        imagepng($this->canvas, null, $quality);
         $data = ob_get_contents();
         ob_end_clean();
 
-        header('Content-Type: image/png');
-        header('Content-Length: ' . strlen($data));
-
-        echo $data;
+        return $data;
     }
 
+    /**
+     * @param string|null $code
+     *
+     * @return int
+     */
     protected function getColor($code = null)
     {
         list($red, $green, $blue) = [255, 255, 255];
@@ -149,7 +223,55 @@ class Image
             list($red, $green, $blue) = [hexdec($codes[0]), hexdec($codes[1]), hexdec($codes[2])];
         }
 
-        return imagecolorallocate($this->resource, $red, $green, $blue);
+        return imagecolorallocate($this->canvas, $red, $green, $blue);
+    }
+
+    /**
+     * @param int $width
+     *
+     * @return $this
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @param int $height
+     *
+     * @return $this
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return $this
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return $this
+     */
+    public function setBackgroundColor($code)
+    {
+        $this->background_color = $code;
+
+        return $this;
     }
 
 }
