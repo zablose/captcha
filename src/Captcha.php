@@ -8,50 +8,278 @@ class Captcha
     /**
      * @var Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var Image
      */
-    protected $image;
+    private $image;
 
     /**
      * @var array
      */
-    protected $backgrounds = [];
+    private $backgrounds = [];
 
     /**
      * @var array
      */
-    protected $fonts = [];
+    private $fonts = [];
 
     /**
      * @var string
      */
-    protected $font;
+    private $font;
 
     /**
      * @var string
      */
-    protected $text;
+    private $text;
 
     /**
      * @var string
      */
-    protected $hash;
+    private $hash;
 
     /**
-     * Create captcha image
+     * @var int
+     */
+    private $angle = 0;
+
+    /**
+     * @var int
+     */
+    private $size;
+
+    /**
+     * @var string
+     */
+    private $color;
+
+    public function __construct($config = [])
+    {
+        $this->configure($config)->loadBackgrounds()->loadFonts()->setImage()->addText()->addLines();
+
+        $this->image
+            ->addContrast($this->config->contrast)
+            ->sharpen($this->config->sharpen)
+            ->invert($this->config->invert)
+            ->blur($this->config->blur);
+    }
+
+    /**
+     * Apply configuration from the file, if present.
      *
      * @param array $config
      *
      * @return $this
      */
-    public function create($config = [])
+    private function configure($config)
     {
-        return $this
-            ->configure($config)->backgrounds()->fonts()
-            ->image()->contrast()->generate()->lines()->sharpen()->invert()->blur();
+        $this->config = new Config($config);
+
+        return $this;
+    }
+
+    /**
+     * Create base image for captcha.
+     *
+     * @return $this
+     */
+    private function setImage()
+    {
+        $image = (new Image())->setWidth($this->config->width)->setHeight($this->config->height);
+
+        $this->image = $this->config->use_background_image
+            ? $image->setPath($this->getRandomBackground())->make()
+            : $image->setBackgroundColor($this->config->background_color)->make();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    private function addText()
+    {
+        $x = 0;
+
+        $this->text = '';
+        for ($i = 0; $i < $this->config->length; $i++)
+        {
+            $this->randomizeFont()->randomizeSize()->randomizeColor()->randomizeAngle();
+
+            $this->image->addText(
+                $char = Random::char($this->config->characters),
+                $x + $this->getCharWidthMargin(),
+                $this->config->height - $this->getCharHeightMargin(),
+                $this->font,
+                $this->size,
+                $this->color,
+                $this->angle
+            );
+
+            $this->text .= $char;
+
+            $x += $this->getCharWidth();
+        }
+
+        $this->hash = password_hash($this->config->sensitive ? $this->text : strtolower($this->text), PASSWORD_BCRYPT);
+
+        return $this;
+    }
+
+    /**
+     * Get random image background path from the list.
+     *
+     * @return string
+     */
+    private function getRandomBackground()
+    {
+        return $this->backgrounds[array_rand($this->backgrounds)];
+    }
+
+    /**
+     * Add random lines to the image.
+     *
+     * @return $this
+     */
+    private function addLines()
+    {
+        for ($i = 0; $i < $this->config->lines; $i++)
+        {
+            $this->image->addLine(
+                mt_rand(0, $this->config->width),
+                mt_rand(0, $this->config->height),
+                mt_rand(0, $this->config->width),
+                mt_rand(0, $this->config->height),
+                $this->getRandomColor()
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load backgrounds.
+     *
+     * @return $this
+     */
+    private function loadBackgrounds()
+    {
+        $this->backgrounds = $this->getFiles($this->config->assets_dir . 'backgrounds', '.png');
+
+        return $this;
+    }
+
+    /**
+     * Load fonts.
+     *
+     * @return $this
+     */
+    private function loadFonts()
+    {
+        $this->fonts = $this->getFiles($this->config->assets_dir . 'fonts', '.ttf');
+
+        return $this;
+    }
+
+    /**
+     * Get files from the directory by extension.
+     *
+     * @param string $path
+     * @param string $extension
+     *
+     * @return string[]
+     */
+    private function getFiles($path, $extension)
+    {
+        $files = [];
+
+        foreach (scandir($path) as $key => $item)
+        {
+            if (stripos($item, $extension) > 1)
+            {
+                $files[] = $path . '/' . $item;
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * @return int
+     */
+    private function getCharWidth()
+    {
+        return (int) $this->config->width / $this->config->length;
+    }
+
+    /**
+     * @return int
+     */
+    private function getCharWidthMargin()
+    {
+        return $this->getCharWidth() > $this->size
+            ? mt_rand(0, (int) ($this->getCharWidth() - $this->size) / 2)
+            : 0;
+    }
+
+    /**
+     * @return int
+     */
+    private function getCharHeightMargin()
+    {
+        return mt_rand(0, $this->config->height - $this->size);
+    }
+
+    /**
+     * @return $this
+     */
+    private function randomizeFont()
+    {
+        $this->font = $this->fonts[array_rand($this->fonts)];
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    private function randomizeAngle()
+    {
+        $this->angle = mt_rand((-1 * $this->config->angle), $this->config->angle);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    private function randomizeColor()
+    {
+        $this->color = $this->getRandomColor();
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    private function getRandomColor()
+    {
+        return $this->config->colors[array_rand($this->config->colors)];
+    }
+
+    /**
+     * Get random font size based on height.
+     *
+     * @return $this
+     */
+    private function randomizeSize()
+    {
+        $this->size = mt_rand((int) $this->config->height * 0.75, (int) $this->config->height * 0.95);
+
+        return $this;
     }
 
     /**
@@ -85,264 +313,7 @@ class Captcha
      */
     public function png()
     {
-        return $this->image->png($this->config->quality);
-    }
-
-    /**
-     * Apply configuration from the file, if present.
-     *
-     * @param array $config
-     *
-     * @return $this
-     */
-    private function configure($config)
-    {
-        $this->config = (new Config())->apply($config);
-
-        return $this;
-    }
-
-    /**
-     * Create base image for captcha.
-     *
-     * @return $this
-     */
-    private function image()
-    {
-        $image = (new Image())->setWidth($this->config->width)->setHeight($this->config->height);
-
-        $this->image = $this->config->use_background_image
-            ? $image->setPath($this->background())->make()
-            : $image->setBackgroundColor($this->config->background_color)->make();
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function contrast()
-    {
-        if ($this->config->contrast <> 0)
-        {
-            $this->image->contrast($this->config->contrast);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function sharpen()
-    {
-        if ($this->config->sharpen)
-        {
-            $this->image->sharpen($this->config->sharpen);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function invert()
-    {
-        if ($this->config->invert)
-        {
-            $this->image->invert();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function blur()
-    {
-        if ($this->config->blur)
-        {
-            $this->image->blur($this->config->blur);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add char to the image.
-     *
-     * @param string $char
-     * @param int    $x
-     *
-     * @return $this
-     */
-    private function char($char, $x)
-    {
-        $this->config->randomizeSize();
-
-        $this->image->text(
-            $char,
-            $x + $this->getCharWidthMargin(),
-            $this->config->height - $this->getCharHeightMargin(),
-            $this->randomizeFont()->getFont(),
-            $this->config->getSize(),
-            $this->config->randomizeColor()->getColor(),
-            $this->config->randomizeAngle()->getAngle()
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get random image background path from the list.
-     *
-     * @return string
-     */
-    private function background()
-    {
-        return $this->backgrounds[array_rand($this->backgrounds)];
-    }
-
-    /**
-     * @return $this
-     */
-    private function randomizeFont()
-    {
-        $this->font = $this->fonts[array_rand($this->fonts)];
-
-        return $this;
-    }
-
-    /**
-     * Get random image font path from the list.
-     *
-     * @return string
-     */
-    private function getFont()
-    {
-        return $this->font;
-    }
-
-    /**
-     * Add random lines to the image.
-     *
-     * @return $this
-     */
-    private function lines()
-    {
-        for ($i = 0; $i < $this->config->lines; $i++)
-        {
-            $this->line();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add random line to the image.
-     *
-     * @return $this
-     */
-    private function line()
-    {
-        $this->image->line(
-            mt_rand(0, $this->config->width),
-            mt_rand(0, $this->config->height),
-            mt_rand(0, $this->config->width),
-            mt_rand(0, $this->config->height),
-            $this->config->randomizeColor()->getColor()
-        );
-
-        return $this;
-    }
-
-    /**
-     * Load backgrounds.
-     *
-     * @return $this
-     */
-    private function backgrounds()
-    {
-        $this->backgrounds = $this->getFiles($this->config->assets_dir . 'backgrounds', '.png');
-
-        return $this;
-    }
-
-    /**
-     * Load fonts.
-     *
-     * @return $this
-     */
-    private function fonts()
-    {
-        $this->fonts = $this->getFiles($this->config->assets_dir . 'fonts', '.ttf');
-
-        return $this;
-    }
-
-    /**
-     * Get files from the directory by extension.
-     *
-     * @param string $path
-     * @param string $extension
-     *
-     * @return string[]
-     */
-    private function getFiles($path, $extension)
-    {
-        $files = [];
-
-        foreach (scandir($path) as $key => $item)
-        {
-            if (stripos($item, $extension) > 1)
-            {
-                $files[] = $path . '/' . $item;
-            }
-        }
-
-        return $files;
-    }
-
-    /**
-     * @return $this
-     */
-    private function generate()
-    {
-        $x = 0;
-
-        $captcha = '';
-        for ($i = 0; $i < $this->config->length; $i++)
-        {
-            $char = Random::char($this->config->characters);
-            $this->char($char, $x);
-            $x       += $this->getCharWidth();
-            $captcha .= $char;
-        }
-
-        $this->text = $captcha;
-
-        $this->hash = password_hash($this->config->sensitive ? $captcha : strtolower($captcha), PASSWORD_BCRYPT);
-
-        return $this;
-    }
-
-    protected function getCharHeightMargin()
-    {
-        return mt_rand(0, $this->config->height - $this->config->getSize());
-    }
-
-    protected function getCharWidthMargin()
-    {
-        return $this->getCharWidth() > $this->config->getSize()
-            ? mt_rand(0, (int) ($this->getCharWidth() - $this->config->getSize()) / 2)
-            : 0;
-    }
-
-    protected function getCharWidth()
-    {
-        return (int) $this->config->width / $this->config->length;
+        return $this->image->png($this->config->compression);
     }
 
     /**

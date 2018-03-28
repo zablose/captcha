@@ -66,7 +66,7 @@ class Image
     /**
      * @return $this
      */
-    public function resize()
+    protected function resize()
     {
         $width  = imagesx($this->canvas);
         $height = imagesy($this->canvas);
@@ -86,9 +86,12 @@ class Image
      *
      * @return $this
      */
-    public function contrast($level)
+    public function addContrast($level)
     {
-        imagefilter($this->canvas, IMG_FILTER_CONTRAST, $level);
+        if ($level <> 0)
+        {
+            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $level);
+        }
 
         return $this;
     }
@@ -100,28 +103,36 @@ class Image
      */
     public function sharpen($amount)
     {
-        $min = $amount >= 10 ? $amount * -0.01 : 0;
-        $max = $amount * -0.025;
-        $abs = ((4 * $min + 4 * $max) * -1) + 1;
-        $div = 1;
+        if ($amount)
+        {
+            $min = $amount >= 10 ? $amount * -0.01 : 0;
+            $max = $amount * -0.025;
+            $abs = ((4 * $min + 4 * $max) * -1) + 1;
+            $div = 1;
 
-        $matrix = [
-            [$min, $max, $min],
-            [$max, $abs, $max],
-            [$min, $max, $min],
-        ];
+            $matrix = [
+                [$min, $max, $min],
+                [$max, $abs, $max],
+                [$min, $max, $min],
+            ];
 
-        imageconvolution($this->canvas, $matrix, $div, 0);
+            imageconvolution($this->canvas, $matrix, $div, 0);
+        }
 
         return $this;
     }
 
     /**
+     * @param bool $yes
+     *
      * @return $this
      */
-    public function invert()
+    public function invert($yes = false)
     {
-        imagefilter($this->canvas, IMG_FILTER_NEGATE);
+        if ($yes)
+        {
+            imagefilter($this->canvas, IMG_FILTER_NEGATE);
+        }
 
         return $this;
     }
@@ -152,15 +163,12 @@ class Image
      *
      * @return $this
      */
-    public function text($text, $x, $y, $font, $size, $color, $angle)
+    public function addText($text, $x, $y, $font, $size, $color, $angle)
     {
         $box = imagettfbbox($this->getFontPoints($size), $angle, $font, $text);
 
-        $mx = round(min($box[0], $box[6]));
-        $my = round(max($box[1], $box[3]));
-
-        $x = $x - $mx;
-        $y = $y - $my;
+        $x = $x - min($box[0], $box[6]);
+        $y = $y - max($box[1], $box[3]);
 
         imagettftext($this->canvas, $this->getFontPoints($size), $angle, $x, $y, $this->getColor($color), $font, $text);
 
@@ -186,7 +194,7 @@ class Image
      *
      * @return $this
      */
-    public function line($x1, $y1, $x2, $y2, $color)
+    public function addLine($x1, $y1, $x2, $y2, $color)
     {
         imageline($this->canvas, $x1, $y1, $x2, $y2, $this->getColor($color));
 

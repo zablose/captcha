@@ -31,9 +31,11 @@ class Config
     public $height = 60;
 
     /**
+     * Compression level: from 0 (no compression) to 9.
+     *
      * @var int
      */
-    public $quality = 9;
+    public $compression = 9;
 
     /**
      * @var int
@@ -53,7 +55,7 @@ class Config
     /**
      * @var array
      */
-    private $colors = [
+    public $colors = [
         '#000000', // Black
         '#A60F0F', // Red
         '#6E3200', // Brown
@@ -96,26 +98,9 @@ class Config
     public $angle = 45;
 
     /**
-     * @var int
-     */
-    private $current_angle = 0;
-
-    /**
-     * @var int
-     */
-    private $size;
-
-    /**
-     * @var string
-     */
-    private $color;
-
-    /**
      * @param array $config
-     *
-     * @return $this
      */
-    public function apply($config)
+    public function __construct($config)
     {
         foreach ($config as $key => $value)
         {
@@ -124,64 +109,6 @@ class Config
                 $this->$key = $value;
             }
         }
-
-        return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function randomizeAngle()
-    {
-        $this->current_angle = mt_rand((-1 * $this->angle), $this->angle);
-
-        return $this;
-    }
-
-    /**
-     * Get random angle based on angle.
-     *
-     * @return int
-     */
-    public function getAngle()
-    {
-        return $this->current_angle;
-    }
-
-    public function randomizeColor()
-    {
-        $this->color = $this->colors[array_rand($this->colors)];
-
-        return $this;
-    }
-
-    /**
-     * Get random font color from the list.
-     *
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
-    }
-
-    /**
-     * Get random font size based on height.
-     *
-     * @return $this
-     */
-    public function randomizeSize()
-    {
-        $this->size = mt_rand((int) $this->height * 0.75, (int) $this->height * 0.95);
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->size;
-    }
 }
