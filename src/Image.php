@@ -202,14 +202,14 @@ class Image
     }
 
     /**
-     * @param int $quality
+     * @param int $compression
      *
      * @return string
      */
-    public function png($quality)
+    public function png($compression)
     {
         ob_start();
-        imagepng($this->canvas, null, $quality);
+        imagepng($this->canvas, null, $compression);
         $data = ob_get_contents();
         ob_end_clean();
 

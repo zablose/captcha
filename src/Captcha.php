@@ -55,6 +55,9 @@ class Captcha
      */
     private $color;
 
+    /**
+     * @param array $config
+     */
     public function __construct($config = [])
     {
         $this->configure($config)->loadBackgrounds()->loadFonts()->setImage()->addText()->addLines();
@@ -90,7 +93,7 @@ class Captcha
         $image = (new Image())->setWidth($this->config->width)->setHeight($this->config->height);
 
         $this->image = $this->config->use_background_image
-            ? $image->setPath($this->getRandomBackground())->make()
+            ? $image->setPath(Random::value($this->backgrounds))->make()
             : $image->setBackgroundColor($this->config->background_color)->make();
 
         return $this;
@@ -106,7 +109,10 @@ class Captcha
         $this->text = '';
         for ($i = 0; $i < $this->config->length; $i++)
         {
-            $this->randomizeFont()->randomizeSize()->randomizeColor()->randomizeAngle();
+            $this->font  = Random::value($this->fonts);
+            $this->size  = Random::size($this->config->height);
+            $this->color = Random::value($this->config->colors);
+            $this->angle = Random::angle($this->config->angle);
 
             $this->image->addText(
                 $char = Random::char($this->config->characters),
@@ -129,16 +135,6 @@ class Captcha
     }
 
     /**
-     * Get random image background path from the list.
-     *
-     * @return string
-     */
-    private function getRandomBackground()
-    {
-        return $this->backgrounds[array_rand($this->backgrounds)];
-    }
-
-    /**
      * Add random lines to the image.
      *
      * @return $this
@@ -152,7 +148,7 @@ class Captcha
                 mt_rand(0, $this->config->height),
                 mt_rand(0, $this->config->width),
                 mt_rand(0, $this->config->height),
-                $this->getRandomColor()
+                Random::value($this->config->colors)
             );
         }
 
@@ -230,56 +226,6 @@ class Captcha
     private function getCharHeightMargin()
     {
         return mt_rand(0, $this->config->height - $this->size);
-    }
-
-    /**
-     * @return $this
-     */
-    private function randomizeFont()
-    {
-        $this->font = $this->fonts[array_rand($this->fonts)];
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function randomizeAngle()
-    {
-        $this->angle = mt_rand((-1 * $this->config->angle), $this->config->angle);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function randomizeColor()
-    {
-        $this->color = $this->getRandomColor();
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    private function getRandomColor()
-    {
-        return $this->config->colors[array_rand($this->config->colors)];
-    }
-
-    /**
-     * Get random font size based on height.
-     *
-     * @return $this
-     */
-    private function randomizeSize()
-    {
-        $this->size = mt_rand((int) $this->config->height * 0.75, (int) $this->config->height * 0.95);
-
-        return $this;
     }
 
     /**
