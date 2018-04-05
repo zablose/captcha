@@ -1,9 +1,12 @@
 {
     "name": "zablose/captcha",
-    "description": "Captcha for PHP ~7.1",
+    "description": "Captcha",
     "keywords": [
+        "php",
         "captcha",
-        "laravel"
+        "laravel",
+        "spam",
+        "bot"
     ],
     "license": "MIT",
     "authors": [
@@ -17,10 +20,16 @@
         "ext-gd": "*"
     },
     "require-dev": {
+        "phpunit/phpunit": "^7.0.0"
     },
     "autoload": {
         "psr-4": {
             "Zablose\\Captcha\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zablose\\Captcha\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -29,5 +38,10 @@
                 "Zablose\\Captcha\\CaptchaServiceProvider"
             ]
         }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
     }
 }
