@@ -15,10 +15,10 @@ class CaptchaServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/captcha.php' => config_path('captcha.php'),
+            __DIR__ . '/../laravel/config/captcha.php' => config_path('captcha.php'),
         ], 'config');
 
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        $this->loadRoutesFrom(__DIR__ . '/../laravel/routes.php');
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
@@ -41,7 +41,7 @@ class CaptchaServiceProvider extends ServiceProvider
             'The :attribute does not match.'
         );
 
-        require_once __DIR__ . '/helpers.php';
+        require_once __DIR__ . '/../laravel/helpers.php';
     }
 
 }
