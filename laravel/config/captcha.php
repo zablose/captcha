@@ -9,7 +9,7 @@ return [
         'width'                => 160,
         'height'               => 60,
         'compression'          => 9,
-        'lines'                => 5,
+        'lines'                => 10,
         'use_background_image' => true,
         'background_color'     => '#FFFFFF',
         'colors'               => [
@@ -28,13 +28,37 @@ return [
         'blur'                 => 0,
         'invert'               => false,
         'contrast'             => 0,
-        'angle'                => 15,
+        'angle'                => 45,
     ],
 
     'small' => [
         'length' => 3,
-        'width'  => 60,
-        'height' => 20,
+        'width'  => 90,
+        'height' => 40,
+    ],
+
+    'invert' => [
+        'invert' => true,
+    ],
+
+    'sharpen' => [
+        'sharpen' => 25,
+    ],
+
+    'blur' => [
+        'blur' => 5,
+    ],
+
+    'contrast' => [
+        'contrast' => 50,
+    ],
+
+    'no-angle' => [
+        'angle' => 0,
+    ],
+
+    'bg-color' => [
+        'use_background_image' => false,
     ],
 
 ];
