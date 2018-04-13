@@ -1,4 +1,6 @@
-# Captcha for PHP ~7.1
+# Captcha
+
+[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
 
 > Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
 
@@ -14,15 +16,18 @@ Check that new route is working, by visiting '://localhost/captcha/default'
 
 You have to see a captcha image like one of these:
 
-![](readme/images/captcha-sample-01.png)
-![](readme/images/captcha-sample-02.png)
-![](readme/images/captcha-sample-03.png)
-![](readme/images/captcha-sample-04.png)
-![](readme/images/captcha-sample-05.png)
+![](readme/images/captcha-default.png)
+![](readme/images/captcha-small.png)
+![](readme/images/captcha-invert.png)
+![](readme/images/captcha-sharpen.png)
+![](readme/images/captcha-blur.png)
+![](readme/images/captcha-contrast.png)
+![](readme/images/captcha-no-angle.png)
+![](readme/images/captcha-bg-color.png)
 
 Add captcha to your form, like in the code sample below:
 
-> If standard auth in use, add code sample to `./resources/views/auth/login.blade.php`.
+> If standard auth is in use, you may add code sample to `./resources/views/auth/login.blade.php`.
 
 ```blade
     <div class="form-group">
@@ -32,17 +37,14 @@ Add captcha to your form, like in the code sample below:
             </label>
         </div>
     </div>
-    
     <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
         <label class="col-md-4 control-label">Captcha</label>
-    
         <div class="col-md-6">
             <input type="text" class="form-control" name="captcha" autocomplete="off">
-    
             @if ($errors->has('captcha'))
-                <span class="help-block">
-            <strong>{{ $errors->first('captcha') }}</strong>
-        </span>
+            <span class="help-block">
+                <strong>{{ $errors->first('captcha') }}</strong>
+            </span>
             @endif
         </div>
     </div>
@@ -72,7 +74,7 @@ Add validation rule to your controller, like in the code sample below:
 
 In case you are not happy Laravel user, you may still use this package.
 
-To create captcha, add details to the session and output the image, you may use code like:
+To create captcha, add details to the session and output the image. A code may look like:
 
 ```php
 <?php
@@ -81,11 +83,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Zablose\Captcha\Captcha;
 
-$captcha = (new Captcha())
-    ->create([
-        'invert' => true,
-        'width'  => 320,
-]);
+$captcha = new Captcha(['invert' => true, 'width' => 220]);
 
 $data = [
     'captcha' => [
@@ -94,7 +92,7 @@ $data = [
         ]
 ];
 
-// TODO: Add $data to the session.
+// Add $data to the session.
 
 echo $captcha->png();
 

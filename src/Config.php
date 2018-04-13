@@ -31,14 +31,16 @@ class Config
     public $height = 60;
 
     /**
+     * Compression level: from 0 (no compression) to 9.
+     *
      * @var int
      */
-    public $quality = 70;
+    public $compression = 9;
 
     /**
      * @var int
      */
-    public $lines = 5;
+    public $lines = 10;
 
     /**
      * @var bool
@@ -53,7 +55,7 @@ class Config
     /**
      * @var array
      */
-    private $colors = [
+    public $colors = [
         '#000000', // Black
         '#A60F0F', // Red
         '#6E3200', // Brown
@@ -93,14 +95,12 @@ class Config
     /**
      * @var int
      */
-    private $angle = 15;
+    public $angle = 45;
 
     /**
      * @param array $config
-     *
-     * @return $this
      */
-    public function apply($config)
+    public function __construct($config)
     {
         foreach ($config as $key => $value)
         {
@@ -109,37 +109,6 @@ class Config
                 $this->$key = $value;
             }
         }
-
-        return $this;
     }
 
-    /**
-     * Get random angle based on angle.
-     *
-     * @return int
-     */
-    public function angle()
-    {
-        return mt_rand((-1 * $this->angle), $this->angle);
-    }
-
-    /**
-     * Get random font color from the list.
-     *
-     * @return array
-     */
-    public function color()
-    {
-        return $this->colors[array_rand($this->colors)];
-    }
-
-    /**
-     * Get random font size based on height.
-     *
-     * @return integer
-     */
-    public function size()
-    {
-        return mt_rand((int) $this->height * 0.85, (int) $this->height * 0.95);
-    }
 }
