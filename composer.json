@@ -2,9 +2,11 @@
     "name": "zablose/captcha",
     "description": "Captcha",
     "keywords": [
-        "php",
         "captcha",
+        "security",
+        "php",
         "laravel",
+        "laravel5",
         "spam",
         "bot"
     ],

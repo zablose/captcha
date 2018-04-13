@@ -1,5 +1,7 @@
 # Captcha
 
+[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
+
 > Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
 
 ## Installation
