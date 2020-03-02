@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha\Tests;
 
@@ -7,14 +7,9 @@ use Zablose\Captcha\Config;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-
-    /**
-     * @param array  $config
-     * @param string $message
-     */
-    protected function assertCaptcha(array $config = [], string $message = '') : void
+    protected function assertCaptcha(array $config = [], string $message = ''): void
     {
-        list($width, $height, $type) = getimagesizefromstring((new Captcha($config))->png());
+        [$width, $height, $type] = getimagesizefromstring((new Captcha($config))->png());
 
         $config = new Config($config);
 
@@ -23,5 +18,4 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $message
         );
     }
-
 }

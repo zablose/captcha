@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha\Tests;
 
@@ -6,7 +6,6 @@ use Zablose\Captcha\Captcha;
 
 class CaptchaTest extends TestCase
 {
-
     /** @test */
     public function is_resizeable()
     {
@@ -32,10 +31,9 @@ class CaptchaTest extends TestCase
     {
         $this->assertCaptcha([
             'contrast' => 50,
-            'sharpen'  => 10,
-            'invert'   => true,
-            'blur'     => 25,
+            'sharpen' => 10,
+            'invert' => true,
+            'blur' => 25,
         ]);
     }
-
 }

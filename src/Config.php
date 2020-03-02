@@ -1,61 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
 class Config
 {
+    public string $assets_dir = __DIR__.'/../assets/';
+    public string $characters = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
+    public int $length = 5;
+    public int $width = 160;
+    public int $height = 60;
 
-    /**
-     * @var string
-     */
-    public $assets_dir = __DIR__ . '/../assets/';
+    /** Compression level: from 0 (no compression) to 9. */
+    public int $compression = 9;
 
-    /**
-     * @var string
-     */
-    public $characters = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
-
-    /**
-     * @var int
-     */
-    public $length = 5;
-
-    /**
-     * @var int
-     */
-    public $width = 160;
-
-    /**
-     * @var int
-     */
-    public $height = 60;
-
-    /**
-     * Compression level: from 0 (no compression) to 9.
-     *
-     * @var int
-     */
-    public $compression = 9;
-
-    /**
-     * @var int
-     */
-    public $lines = 10;
-
-    /**
-     * @var bool
-     */
-    public $use_background_image = true;
-
-    /**
-     * @var string
-     */
-    public $background_color = '#FFFFFF';
-
-    /**
-     * @var array
-     */
-    public $colors = [
+    public int $lines = 10;
+    public bool $use_background_image = true;
+    public string $background_color = '#FFFFFF';
+    public array $colors = [
         '#000000', // Black
         '#A60F0F', // Red
         '#6E3200', // Brown
@@ -66,49 +27,19 @@ class Config
         '#0D5F09', // Green
         '#9F9000', // Yellow
     ];
+    public bool $sensitive = false;
+    public int $sharpen = 0;
+    public int $blur = 0;
+    public bool $invert = false;
+    public int $contrast = 0;
+    public int $angle = 45;
 
-    /**
-     * @var bool
-     */
-    public $sensitive = false;
-
-    /**
-     * @var int
-     */
-    public $sharpen = 0;
-
-    /**
-     * @var int
-     */
-    public $blur = 0;
-
-    /**
-     * @var bool
-     */
-    public $invert = false;
-
-    /**
-     * @var int
-     */
-    public $contrast = 0;
-
-    /**
-     * @var int
-     */
-    public $angle = 45;
-
-    /**
-     * @param array $config
-     */
-    public function __construct($config)
+    public function __construct(array $config)
     {
-        foreach ($config as $key => $value)
-        {
-            if (property_exists($this, $key))
-            {
+        foreach ($config as $key => $value) {
+            if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
     }
-
 }

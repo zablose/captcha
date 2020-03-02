@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
 
-> Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
-
 ## Installation
 
 ```
@@ -14,7 +12,7 @@ composer require zablose/captcha
 
 Check that new route is working, by visiting '://localhost/captcha/default'
 
-You have to see a captcha image like one of these:
+You should see a captcha image like one of these:
 
 ![](readme/images/captcha-default.png)
 ![](readme/images/captcha-small.png)

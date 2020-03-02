@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha\Tests;
 
@@ -6,7 +6,6 @@ use Zablose\Captcha\Random;
 
 class RandomTest extends TestCase
 {
-
     /** @test */
     public function string()
     {
@@ -17,5 +16,4 @@ class RandomTest extends TestCase
             Random::string(16, 'a') === Random::string(16, 'a')
         );
     }
-
 }

@@ -1,61 +1,30 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
 class Image
 {
-
-    /**
-     * Image canvas.
-     *
-     * @var resource
-     */
+    /** @var resource */
     protected $canvas;
 
-    /**
-     * @var int
-     */
-    protected $width = 160;
+    protected int $width = 160;
+    protected int $height = 60;
+    protected string $path = '';
+    protected string $background_color = '#ffffff';
 
-    /**
-     * @var int
-     */
-    protected $height = 60;
-
-    /**
-     * Path to the picture to load.
-     *
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var string
-     */
-    protected $background_color = '#ffffff';
-
-    /**
-     * @return $this
-     */
-    public function make()
+    public function make(): self
     {
         return $this->path ? $this->load()->resize() : $this->create();
     }
 
-    /**
-     * @return $this
-     */
-    protected function load()
+    protected function load(): self
     {
         $this->canvas = @imagecreatefrompng($this->path);
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function create()
+    protected function create(): self
     {
         $this->canvas = @imagecreatetruecolor($this->width, $this->height);
         imagefill($this->canvas, 0, 0, $this->getColor($this->background_color));
@@ -63,16 +32,12 @@ class Image
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function resize()
+    protected function resize(): self
     {
         $width  = imagesx($this->canvas);
         $height = imagesy($this->canvas);
 
-        if ($this->width !== $width || $this->height !== $width)
-        {
+        if ($this->width !== $width || $this->height !== $width) {
             $dst_image = imagecreatetruecolor($this->width, $this->height);
             imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
             $this->canvas = $dst_image;
@@ -82,14 +47,13 @@ class Image
     }
 
     /**
-     * @param int $level Contrast level (-100 = max contrast, 0 = no change, +100 = min contrast)
+     * @param  int  $level  Contrast level (-100 = max contrast, 0 = no change, +100 = min contrast)
      *
      * @return $this
      */
-    public function addContrast($level)
+    public function addContrast(int $level): self
     {
-        if ($level <> 0)
-        {
+        if ($level <> 0) {
             imagefilter($this->canvas, IMG_FILTER_CONTRAST, $level);
         }
 
@@ -97,14 +61,13 @@ class Image
     }
 
     /**
-     * @param int $amount Between 0 and 100
+     * @param  int  $amount  Between 0 and 100
      *
      * @return $this
      */
-    public function sharpen($amount)
+    public function sharpen(int $amount): self
     {
-        if ($amount)
-        {
+        if ($amount) {
             $min = $amount >= 10 ? $amount * -0.01 : 0;
             $max = $amount * -0.025;
             $abs = ((4 * $min + 4 * $max) * -1) + 1;
@@ -122,15 +85,9 @@ class Image
         return $this;
     }
 
-    /**
-     * @param bool $yes
-     *
-     * @return $this
-     */
-    public function invert($yes = false)
+    public function invert(bool $yes = false): self
     {
-        if ($yes)
-        {
+        if ($yes) {
             imagefilter($this->canvas, IMG_FILTER_NEGATE);
         }
 
@@ -138,32 +95,20 @@ class Image
     }
 
     /**
-     * @param int $amount Between 0 and 100
+     * @param  int  $amount  Between 0 and 100
      *
      * @return $this
      */
-    public function blur($amount)
+    public function blur(int $amount): self
     {
-        for ($i = 0; $i < intval($amount); $i++)
-        {
+        for ($i = 0; $i < intval($amount); $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
 
         return $this;
     }
 
-    /**
-     * @param string $text
-     * @param int    $x
-     * @param int    $y
-     * @param string $font
-     * @param int    $size
-     * @param int    $color
-     * @param int    $angle
-     *
-     * @return $this
-     */
-    public function addText($text, $x, $y, $font, $size, $color, $angle)
+    public function addText(string $text, int $x, int $y, string $font, int $size, string $color, int $angle): self
     {
         $box = imagettfbbox($this->getFontPoints($size), $angle, $font, $text);
 
@@ -175,38 +120,19 @@ class Image
         return $this;
     }
 
-    /**
-     * @param int $size
-     *
-     * @return int
-     */
-    public function getFontPoints($size)
+    public function getFontPoints(int $size): int
     {
         return intval(ceil($size * 0.75));
     }
 
-    /**
-     * @param int $x1
-     * @param int $y1
-     * @param int $x2
-     * @param int $y2
-     * @param int $color
-     *
-     * @return $this
-     */
-    public function addLine($x1, $y1, $x2, $y2, $color)
+    public function addLine(int $x1, int $y1, int $x2, int $y2, string $color): self
     {
         imageline($this->canvas, $x1, $y1, $x2, $y2, $this->getColor($color));
 
         return $this;
     }
 
-    /**
-     * @param int $compression
-     *
-     * @return string
-     */
-    public function png($compression)
+    public function png(int $compression): string
     {
         ob_start();
         imagepng($this->canvas, null, $compression);
@@ -216,70 +142,43 @@ class Image
         return $data;
     }
 
-    /**
-     * @param string|null $code
-     *
-     * @return int
-     */
-    protected function getColor($code = null)
+    protected function getColor(string $code = ''): int
     {
-        list($red, $green, $blue) = [255, 255, 255];
+        [$red, $green, $blue] = [255, 255, 255];
 
-        if ($code)
-        {
+        if ($code) {
             $codes = str_split(substr($code, -6), 2);
-            list($red, $green, $blue) = [hexdec($codes[0]), hexdec($codes[1]), hexdec($codes[2])];
+            [$red, $green, $blue] = [hexdec($codes[0]), hexdec($codes[1]), hexdec($codes[2])];
         }
 
         return imagecolorallocate($this->canvas, $red, $green, $blue);
     }
 
-    /**
-     * @param int $width
-     *
-     * @return $this
-     */
-    public function setWidth($width)
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
         return $this;
     }
 
-    /**
-     * @param int $height
-     *
-     * @return $this
-     */
-    public function setHeight($height)
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
         return $this;
     }
 
-    /**
-     * @param string $path
-     *
-     * @return $this
-     */
-    public function setPath($path)
+    public function setPath(string $path): self
     {
         $this->path = $path;
 
         return $this;
     }
 
-    /**
-     * @param string $code
-     *
-     * @return $this
-     */
-    public function setBackgroundColor($code)
+    public function setBackgroundColor(string $code): self
     {
         $this->background_color = $code;
 
         return $this;
     }
-
 }

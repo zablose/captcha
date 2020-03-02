@@ -1,64 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
 class Captcha
 {
+    private Config $config;
+    private Image $image;
+    private array $backgrounds = [];
+    private array $fonts = [];
+    private string $font;
+    private string $text;
+    private string $hash;
+    private int $angle = 0;
+    private int $size;
+    private string $color;
 
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var Image
-     */
-    private $image;
-
-    /**
-     * @var array
-     */
-    private $backgrounds = [];
-
-    /**
-     * @var array
-     */
-    private $fonts = [];
-
-    /**
-     * @var string
-     */
-    private $font;
-
-    /**
-     * @var string
-     */
-    private $text;
-
-    /**
-     * @var string
-     */
-    private $hash;
-
-    /**
-     * @var int
-     */
-    private $angle = 0;
-
-    /**
-     * @var int
-     */
-    private $size;
-
-    /**
-     * @var string
-     */
-    private $color;
-
-    /**
-     * @param array $config
-     */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->configure($config)->loadBackgrounds()->loadFonts()->setImage()->addText()->addLines();
 
@@ -69,26 +26,14 @@ class Captcha
             ->blur($this->config->blur);
     }
 
-    /**
-     * Apply configuration from the file, if present.
-     *
-     * @param array $config
-     *
-     * @return $this
-     */
-    private function configure($config)
+    private function configure(array $config): self
     {
         $this->config = new Config($config);
 
         return $this;
     }
 
-    /**
-     * Create base image for captcha.
-     *
-     * @return $this
-     */
-    private function setImage()
+    private function setImage(): self
     {
         $image = (new Image())->setWidth($this->config->width)->setHeight($this->config->height);
 
@@ -99,18 +44,14 @@ class Captcha
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function addText()
+    private function addText(): self
     {
         $x = 0;
 
         $this->text = '';
-        for ($i = 0; $i < $this->config->length; $i++)
-        {
+        for ($i = 0; $i < $this->config->length; $i++) {
             $this->font  = Random::value($this->fonts);
-            $this->size  = Random::size($this->config->height);
+            $this->size  = Random::fontSize($this->config->height);
             $this->color = Random::value($this->config->colors);
             $this->angle = Random::angle($this->config->angle);
 
@@ -134,15 +75,9 @@ class Captcha
         return $this;
     }
 
-    /**
-     * Add random lines to the image.
-     *
-     * @return $this
-     */
-    private function addLines()
+    private function addLines(): self
     {
-        for ($i = 0; $i < $this->config->lines; $i++)
-        {
+        for ($i = 0; $i < $this->config->lines; $i++) {
             $this->image->addLine(
                 mt_rand(0, $this->config->width),
                 mt_rand(0, $this->config->height),
@@ -155,123 +90,72 @@ class Captcha
         return $this;
     }
 
-    /**
-     * Load backgrounds.
-     *
-     * @return $this
-     */
-    private function loadBackgrounds()
+    private function loadBackgrounds(): self
     {
-        $this->backgrounds = $this->getFiles($this->config->assets_dir . 'backgrounds', '.png');
+        $this->backgrounds = $this->getFiles($this->config->assets_dir.'backgrounds', '.png');
 
         return $this;
     }
 
-    /**
-     * Load fonts.
-     *
-     * @return $this
-     */
-    private function loadFonts()
+    private function loadFonts(): self
     {
-        $this->fonts = $this->getFiles($this->config->assets_dir . 'fonts', '.ttf');
+        $this->fonts = $this->getFiles($this->config->assets_dir.'fonts', '.ttf');
 
         return $this;
     }
 
-    /**
-     * Get files from the directory by extension.
-     *
-     * @param string $path
-     * @param string $extension
-     *
-     * @return string[]
-     */
-    private function getFiles($path, $extension)
+    private function getFiles(string $path, string $extension): array
     {
         $files = [];
 
-        foreach (scandir($path) as $key => $item)
-        {
-            if (stripos($item, $extension) > 1)
-            {
-                $files[] = $path . '/' . $item;
+        foreach (scandir($path) as $key => $item) {
+            if (stripos($item, $extension) > 1) {
+                $files[] = $path.'/'.$item;
             }
         }
 
         return $files;
     }
 
-    /**
-     * @return int
-     */
-    private function getCharWidth()
+    private function getCharWidth(): int
     {
         return (int) $this->config->width / $this->config->length;
     }
 
-    /**
-     * @return int
-     */
-    private function getCharWidthMargin()
+    private function getCharWidthMargin(): int
     {
         return $this->getCharWidth() > $this->size
-            ? mt_rand(0, (int) ($this->getCharWidth() - $this->size) / 2)
+            ? mt_rand(0, intval(($this->getCharWidth() - $this->size) / 2))
             : 0;
     }
 
-    /**
-     * @return int
-     */
-    private function getCharHeightMargin()
+    private function getCharHeightMargin(): int
     {
         return mt_rand(0, $this->config->height - $this->size);
     }
 
-    /**
-     * @return bool
-     */
-    public function sensitive()
+    public function sensitive(): bool
     {
         return $this->config->sensitive;
     }
 
-    /**
-     * Get Captcha as a string.
-     *
-     * @return string
-     */
-    public function txt()
+    public function txt(): string
     {
         return $this->text;
     }
 
-    /**
-     * @return string
-     */
-    public function hash()
+    public function hash(): string
     {
         return $this->hash;
     }
 
-    /**
-     * @return string
-     */
-    public function png()
+    public function png(): string
     {
         return $this->image->png($this->config->compression);
     }
 
-    /**
-     * @param bool   $sensitive
-     * @param string $captcha
-     * @param string $hash
-     *
-     * @return bool
-     */
-    public static function check($sensitive, $captcha, $hash)
+    public static function check(bool $sensitive, string $captcha, string $hash): bool
     {
         return password_verify($sensitive ? $captcha : strtolower($captcha), $hash);
     }
-
 }
