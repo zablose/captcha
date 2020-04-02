@@ -1,12 +1,11 @@
 {
     "name": "zablose/captcha",
-    "description": "Captcha",
+    "description": "Simple captcha with optional goodies for Laravel.",
     "keywords": [
         "captcha",
         "security",
         "php",
         "laravel",
-        "laravel5",
         "spam",
         "bot"
     ],
@@ -22,7 +21,7 @@
         "ext-gd": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0.2"
     },
     "autoload": {
         "psr-4": {

@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
 
+Simple captcha with optional goodies for Laravel.
+
 ## Installation
 
 ```
