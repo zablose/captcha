@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Zablose\Captcha\Tests;
+namespace Tests\Unit;
 
 use Zablose\Captcha\Captcha;
 use Zablose\Captcha\Config;

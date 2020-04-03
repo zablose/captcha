@@ -4,7 +4,7 @@ namespace Zablose\Captcha;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class CaptchaServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,7 @@ class CaptchaServiceProvider extends ServiceProvider
             __DIR__.'/../laravel/config/captcha.php' => config_path('captcha.php'),
         ], 'config');
 
-        $this->loadRoutesFrom(__DIR__.'/../laravel/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../laravel/routes/captcha.php');
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
@@ -36,6 +36,11 @@ class CaptchaServiceProvider extends ServiceProvider
             'The :attribute does not match.'
         );
 
-        require_once __DIR__.'/../laravel/helpers.php';
+        if (! function_exists('captcha_url')) {
+            function captcha_url(string $type = 'default'): string
+            {
+                return url('/captcha/'.$type).'/'.\Zablose\Captcha\Random::string(12);
+            }
+        }
     }
 }
