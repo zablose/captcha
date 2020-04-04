@@ -7,10 +7,8 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     /** @test */
-    public function testBasicTest()
+    public function ok()
     {
-        $this->withoutExceptionHandling();
-
-        $this->get('/captcha/default/abc')->assertStatus(200);
+        $this->get('/')->assertOk();
     }
 }

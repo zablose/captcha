@@ -17,6 +17,11 @@ class Random
         return $string;
     }
 
+    public static function lower(int $length, string $characters = self::CHARACTERS)
+    {
+        return strtolower(self::string($length, $characters));
+    }
+
     public static function char(string $characters = self::CHARACTERS): string
     {
         return $characters[array_rand(str_split($characters))];

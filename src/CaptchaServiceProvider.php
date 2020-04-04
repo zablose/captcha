@@ -8,13 +8,20 @@ use Illuminate\Support\Facades\Session;
 
 class CaptchaServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/captcha.php', 'captcha');
+
+        require __DIR__.'/../helpers.php';
+    }
+
+    public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../laravel/config/captcha.php' => config_path('captcha.php'),
+            __DIR__.'/../config/captcha.php' => config_path('captcha.php'),
         ], 'config');
 
-        $this->loadRoutesFrom(__DIR__.'/../laravel/routes/captcha.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/captcha.php');
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
@@ -35,12 +42,5 @@ class CaptchaServiceProvider extends ServiceProvider
             },
             'The :attribute does not match.'
         );
-
-        if (! function_exists('captcha_url')) {
-            function captcha_url(string $type = 'default'): string
-            {
-                return url('/captcha/'.$type).'/'.\Zablose\Captcha\Random::string(12);
-            }
-        }
     }
 }
