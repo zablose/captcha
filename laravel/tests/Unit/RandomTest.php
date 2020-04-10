@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Zablose\Captcha\Random;
 
-class RandomTest extends TestCase
+class RandomTest extends UnitTestCase
 {
     /** @test */
     public function string()

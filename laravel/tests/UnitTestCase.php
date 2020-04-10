@@ -2,10 +2,11 @@
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Zablose\Captcha\Captcha;
 use Zablose\Captcha\Config;
 
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class UnitTestCase extends TestCase
 {
     protected function assertCaptcha(array $config = [], string $message = ''): void
     {

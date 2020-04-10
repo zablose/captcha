@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Zablose\Captcha\Captcha;
 
-class CaptchaTest extends TestCase
+class CaptchaTest extends UnitTestCase
 {
     /** @test */
     public function is_resizeable()
