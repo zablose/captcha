@@ -6,12 +6,14 @@ class Random
 {
     const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
 
-    public static function string(int $length, string $characters = self::CHARACTERS): string
+    public static function string(int $length = 12, string $characters = self::CHARACTERS): string
     {
         $string = '';
 
-        for ($i = 0; $i < $length; $i++) {
-            $string .= self::char($characters);
+        if (strlen($characters) >= 1) {
+            for ($i = 0; $i < $length; $i++) {
+                $string .= self::char($characters);
+            }
         }
 
         return $string;
