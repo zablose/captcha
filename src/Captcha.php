@@ -8,12 +8,7 @@ class Captcha
     private Image $image;
     private array $backgrounds = [];
     private array $fonts = [];
-    private string $font;
     private string $text;
-    private string $hash;
-    private int $angle = 0;
-    private int $size;
-    private string $color;
 
     public function __construct(array $config = [])
     {
@@ -46,31 +41,28 @@ class Captcha
 
     private function addText(): self
     {
-        $x = 0;
+        $width = $this->getWidthPerChar();
 
         $this->text = '';
         for ($i = 0; $i < $this->config->length; $i++) {
-            $this->font  = Random::value($this->fonts);
-            $this->size  = Random::fontSize($this->config->height);
-            $this->color = Random::value($this->config->colors);
-            $this->angle = Random::angle($this->config->angle);
+            $char = Random::char($this->config->characters);
+            $size = Random::fontSize($this->config->height);
+
+            $x = $width * $i + $this->getCharWidthMargin($size);
+            $y = $this->config->height - $this->getCharHeightMargin($size);
 
             $this->image->addText(
-                $char = Random::char($this->config->characters),
-                $x + $this->getCharWidthMargin(),
-                $this->config->height - $this->getCharHeightMargin(),
-                $this->font,
-                $this->size,
-                $this->color,
-                $this->angle
+                $char,
+                $x,
+                $y,
+                Random::value($this->fonts),
+                $size,
+                Random::value($this->config->colors),
+                Random::angle($this->config->angle)
             );
 
             $this->text .= $char;
-
-            $x += $this->getCharWidth();
         }
-
-        $this->hash = password_hash($this->config->sensitive ? $this->text : strtolower($this->text), PASSWORD_BCRYPT);
 
         return $this;
     }
@@ -117,21 +109,21 @@ class Captcha
         return $files;
     }
 
-    private function getCharWidth(): int
+    private function getWidthPerChar(): int
     {
-        return (int) $this->config->width / $this->config->length;
+        return intval($this->config->width / $this->config->length);
     }
 
-    private function getCharWidthMargin(): int
+    private function getCharWidthMargin(int $size): int
     {
-        return $this->getCharWidth() > $this->size
-            ? mt_rand(0, intval(($this->getCharWidth() - $this->size) / 2))
-            : 0;
+        return $this->getWidthPerChar() > $size
+            ? mt_rand(0, intval(($this->getWidthPerChar() - $size) / 2))
+            : -(intval($this->getWidthPerChar() * 0.2));
     }
 
-    private function getCharHeightMargin(): int
+    private function getCharHeightMargin(int $size): int
     {
-        return mt_rand(0, $this->config->height - $this->size);
+        return mt_rand(0, $this->config->height - $size);
     }
 
     public function sensitive(): bool
@@ -146,7 +138,7 @@ class Captcha
 
     public function hash(): string
     {
-        return $this->hash;
+        return password_hash($this->config->sensitive ? $this->text : strtolower($this->text), PASSWORD_BCRYPT);
     }
 
     public function png(): string

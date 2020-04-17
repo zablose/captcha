@@ -46,6 +46,6 @@ class Random
 
     public static function fontSize(int $height): int
     {
-        return mt_rand(intval($height * 0.75), intval($height * 0.95));
+        return mt_rand(intval($height * 0.6), intval($height * 0.8));
     }
 }

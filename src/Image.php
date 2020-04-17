@@ -19,14 +19,14 @@ class Image
 
     protected function load(): self
     {
-        $this->canvas = @imagecreatefrompng($this->path);
+        $this->canvas = imagecreatefrompng($this->path);
 
         return $this;
     }
 
     protected function create(): self
     {
-        $this->canvas = @imagecreatetruecolor($this->width, $this->height);
+        $this->canvas = imagecreatetruecolor($this->width, $this->height);
         imagefill($this->canvas, 0, 0, $this->getColor($this->background_color));
 
         return $this;
@@ -110,19 +110,14 @@ class Image
 
     public function addText(string $text, int $x, int $y, string $font, int $size, string $color, int $angle): self
     {
-        $box = imagettfbbox($this->getFontPoints($size), $angle, $font, $text);
+        $box = imagettfbbox($size, $angle, $font, $text);
 
         $x = $x - min($box[0], $box[6]);
         $y = $y - max($box[1], $box[3]);
 
-        imagettftext($this->canvas, $this->getFontPoints($size), $angle, $x, $y, $this->getColor($color), $font, $text);
+        imagettftext($this->canvas, $size, $angle, $x, $y, $this->getColor($color), $font, $text);
 
         return $this;
-    }
-
-    public function getFontPoints(int $size): int
-    {
-        return intval(ceil($size * 0.75));
     }
 
     public function addLine(int $x1, int $y1, int $x2, int $y2, string $color): self
