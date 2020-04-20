@@ -108,12 +108,30 @@ class Image
         return $this;
     }
 
-    public function addText(string $text, int $x, int $y, string $font, int $size, string $color, int $angle): self
+    public function addText(
+        int $left,
+        int $space_x,
+        int $space_y,
+        string $text,
+        string $font,
+        int $size,
+        string $color,
+        int $angle
+    ): self
     {
         $box = imagettfbbox($size, $angle, $font, $text);
 
-        $x = $x - min($box[0], $box[6]);
-        $y = $y - max($box[1], $box[3]);
+        $min_x = min($box[0], $box[2], $box[4], $box[6]);
+        $max_x = max($box[0], $box[2], $box[4], $box[6]);
+
+        $min_y = min($box[1], $box[3], $box[5], $box[7]);
+        $max_y = max($box[1], $box[3], $box[5], $box[7]);
+
+        $width  = $max_x - $min_x;
+        $height = $max_y - $min_y;
+
+        $x = $left - $min_x + Random::margin($space_x, $width);
+        $y = $space_y - $max_y - Random::margin($space_y, $height);
 
         imagettftext($this->canvas, $size, $angle, $x, $y, $this->getColor($color), $font, $text);
 

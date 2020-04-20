@@ -8,7 +8,7 @@ class Captcha
     private Image $image;
     private array $backgrounds = [];
     private array $fonts = [];
-    private string $text;
+    private string $text = '';
 
     public function __construct(array $config = [])
     {
@@ -41,22 +41,18 @@ class Captcha
 
     private function addText(): self
     {
-        $width = $this->getWidthPerChar();
+        $width = intval($this->config->width / $this->config->length);
 
         $this->text = '';
+
         for ($i = 0; $i < $this->config->length; $i++) {
-            $char = Random::char($this->config->characters);
-            $size = Random::fontSize($this->config->height);
-
-            $x = $width * $i + $this->getCharWidthMargin($size);
-            $y = $this->config->height - $this->getCharHeightMargin($size);
-
             $this->image->addText(
-                $char,
-                $x,
-                $y,
+                $width * $i,
+                $width,
+                $this->config->height,
+                $char = Random::char($this->config->characters),
                 Random::value($this->fonts),
-                $size,
+                Random::size($this->config->height),
                 Random::value($this->config->colors),
                 Random::angle($this->config->angle)
             );
@@ -107,23 +103,6 @@ class Captcha
         }
 
         return $files;
-    }
-
-    private function getWidthPerChar(): int
-    {
-        return intval($this->config->width / $this->config->length);
-    }
-
-    private function getCharWidthMargin(int $size): int
-    {
-        return $this->getWidthPerChar() > $size
-            ? mt_rand(0, intval(($this->getWidthPerChar() - $size) / 2))
-            : -(intval($this->getWidthPerChar() * 0.2));
-    }
-
-    private function getCharHeightMargin(int $size): int
-    {
-        return mt_rand(0, $this->config->height - $size);
     }
 
     public function sensitive(): bool

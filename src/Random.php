@@ -44,8 +44,13 @@ class Random
         return mt_rand((-1 * $angle), $angle);
     }
 
-    public static function fontSize(int $height): int
+    public static function size(int $size): int
     {
-        return mt_rand(intval($height * 0.6), intval($height * 0.8));
+        return mt_rand(intval($size * 0.5), intval($size * 0.8));
+    }
+
+    public static function margin(int $space, int $size): int
+    {
+        return $size < $space ? mt_rand(0, $space - $size) : -1 * mt_rand(0, $size - $space);
     }
 }
