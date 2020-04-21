@@ -28,10 +28,18 @@ class Config
         '#9F9000', // Yellow
     ];
     public bool $sensitive = false;
+
+    /** Between 0 and 100 */
     public int $sharpen = 0;
+
+    /** Between 0 and 100 */
     public int $blur = 0;
+
     public bool $invert = false;
+
+    /** Contrast level (-100 = max contrast, 0 = no change, +100 = min contrast) */
     public int $contrast = 0;
+
     public int $angle = 45;
 
     public function __construct(array $config)

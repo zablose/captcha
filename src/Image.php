@@ -4,72 +4,79 @@ namespace Zablose\Captcha;
 
 class Image
 {
+    public Config $config;
+
     /** @var resource */
-    protected $canvas;
+    private $canvas;
 
-    protected int $width = 160;
-    protected int $height = 60;
-    protected string $path = '';
-    protected string $background_color = '#ffffff';
-
-    public function make(): self
+    public function __construct(array $config)
     {
-        return $this->path ? $this->load()->resize() : $this->create();
+        $this->config = new Config($config);
+
+        $this->config->use_background_image
+            ? $this->createFromImage()->resize()
+            : $this->createFromColor();
     }
 
-    protected function load(): self
+    protected function createFromImage(): self
     {
-        $this->canvas = imagecreatefrompng($this->path);
+        $this->canvas = imagecreatefrompng(
+            Random::value(Directory::files($this->config->assets_dir.'backgrounds', '.png'))
+        );
 
         return $this;
     }
 
-    protected function create(): self
+    protected function createFromColor(): self
     {
-        $this->canvas = imagecreatetruecolor($this->width, $this->height);
-        imagefill($this->canvas, 0, 0, $this->getColor($this->background_color));
+        $this->canvas = imagecreatetruecolor($this->config->width, $this->config->height);
+        imagefill($this->canvas, 0, 0, $this->getColor($this->config->background_color));
 
         return $this;
     }
 
     protected function resize(): self
     {
-        $width  = imagesx($this->canvas);
-        $height = imagesy($this->canvas);
+        $dst_w = $this->config->width;
+        $dst_h = $this->config->height;
+        $src_w = imagesx($this->canvas);
+        $src_h = imagesy($this->canvas);
 
-        if ($this->width !== $width || $this->height !== $width) {
-            $dst_image = imagecreatetruecolor($this->width, $this->height);
-            imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $this->width, $this->height, $width, $height);
+        if ($dst_w !== $src_w || $dst_h !== $src_w) {
+            $dst_image = imagecreatetruecolor($dst_w, $dst_h);
+            imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
             $this->canvas = $dst_image;
         }
 
         return $this;
     }
 
-    /**
-     * @param  int  $level  Contrast level (-100 = max contrast, 0 = no change, +100 = min contrast)
-     *
-     * @return $this
-     */
-    public function addContrast(int $level): self
+    protected function getColor(string $code = ''): int
     {
-        if ($level <> 0) {
-            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $level);
+        [$red, $green, $blue] = [255, 255, 255];
+
+        if ($code) {
+            $codes = str_split(substr($code, -6), 2);
+            [$red, $green, $blue] = [hexdec($codes[0]), hexdec($codes[1]), hexdec($codes[2])];
+        }
+
+        return imagecolorallocate($this->canvas, $red, $green, $blue);
+    }
+
+    public function addContrast(): self
+    {
+        if ($this->config->contrast <> 0) {
+            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->contrast);
         }
 
         return $this;
     }
 
-    /**
-     * @param  int  $amount  Between 0 and 100
-     *
-     * @return $this
-     */
-    public function sharpen(int $amount): self
+    public function sharpen(): self
     {
-        if ($amount) {
-            $min = $amount >= 10 ? $amount * -0.01 : 0;
-            $max = $amount * -0.025;
+        if ($this->config->sharpen) {
+            $min = $this->config->sharpen >= 10 ? $this->config->sharpen * -0.01 : 0;
+            $max = $this->config->sharpen * -0.025;
             $abs = ((4 * $min + 4 * $max) * -1) + 1;
             $div = 1;
 
@@ -85,23 +92,18 @@ class Image
         return $this;
     }
 
-    public function invert(bool $yes = false): self
+    public function invert(): self
     {
-        if ($yes) {
+        if ($this->config->invert) {
             imagefilter($this->canvas, IMG_FILTER_NEGATE);
         }
 
         return $this;
     }
 
-    /**
-     * @param  int  $amount  Between 0 and 100
-     *
-     * @return $this
-     */
-    public function blur(int $amount): self
+    public function blur(): self
     {
-        for ($i = 0; $i < intval($amount); $i++) {
+        for ($i = 0; $i < intval($this->config->blur); $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
 
@@ -138,6 +140,30 @@ class Image
         return $this;
     }
 
+    public function addRandomText(): string
+    {
+        $text  = '';
+        $width = intval($this->config->width / $this->config->length);
+        $fonts = Directory::files($this->config->assets_dir.'fonts', '.ttf');
+
+        for ($i = 0; $i < $this->config->length; $i++) {
+            $this->addText(
+                $width * $i,
+                $width,
+                $this->config->height,
+                $char = Random::char($this->config->characters),
+                Random::value($fonts),
+                Random::size($this->config->height),
+                Random::value($this->config->colors),
+                Random::angle($this->config->angle)
+            );
+
+            $text .= $char;
+        }
+
+        return $text;
+    }
+
     public function addLine(int $x1, int $y1, int $x2, int $y2, string $color): self
     {
         imageline($this->canvas, $x1, $y1, $x2, $y2, $this->getColor($color));
@@ -145,53 +171,28 @@ class Image
         return $this;
     }
 
-    public function png(int $compression): string
+    public function addRandomLines(): self
+    {
+        for ($i = 0; $i < $this->config->lines; $i++) {
+            $this->addLine(
+                mt_rand(0, $this->config->width),
+                mt_rand(0, $this->config->height),
+                mt_rand(0, $this->config->width),
+                mt_rand(0, $this->config->height),
+                Random::value($this->config->colors)
+            );
+        }
+
+        return $this;
+    }
+
+    public function png(): string
     {
         ob_start();
-        imagepng($this->canvas, null, $compression);
+        imagepng($this->canvas, null, $this->config->compression);
         $data = ob_get_contents();
         ob_end_clean();
 
         return $data;
-    }
-
-    protected function getColor(string $code = ''): int
-    {
-        [$red, $green, $blue] = [255, 255, 255];
-
-        if ($code) {
-            $codes = str_split(substr($code, -6), 2);
-            [$red, $green, $blue] = [hexdec($codes[0]), hexdec($codes[1]), hexdec($codes[2])];
-        }
-
-        return imagecolorallocate($this->canvas, $red, $green, $blue);
-    }
-
-    public function setWidth(int $width): self
-    {
-        $this->width = $width;
-
-        return $this;
-    }
-
-    public function setHeight(int $height): self
-    {
-        $this->height = $height;
-
-        return $this;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    public function setBackgroundColor(string $code): self
-    {
-        $this->background_color = $code;
-
-        return $this;
     }
 }
