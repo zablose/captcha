@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Zablose\Captcha\Laravel\Tests\Unit;
 
 use Zablose\Captcha\Captcha;
+use Zablose\Captcha\Laravel\Tests\UnitTestCase;
 
 class CaptchaTest extends UnitTestCase
 {

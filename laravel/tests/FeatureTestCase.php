@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Zablose\Captcha\Laravel\Tests;
 
 use Illuminate\Foundation\Testing\TestCase;
 

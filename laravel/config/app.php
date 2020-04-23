@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpFullyQualifiedNameUsageInspection */
 
 return [
 
@@ -170,11 +170,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        Zablose\Captcha\Laravel\App\Providers\AppServiceProvider::class,
+        Zablose\Captcha\Laravel\App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Zablose\Captcha\Laravel\App\Providers\EventServiceProvider::class,
+        Zablose\Captcha\Laravel\App\Providers\RouteServiceProvider::class,
 
     ],
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Zablose\Captcha\Laravel\Tests\Feature;
 
-use Tests\FeatureTestCase;
+use Zablose\Captcha\Laravel\Tests\FeatureTestCase;
 
 class ExampleTest extends FeatureTestCase
 {
