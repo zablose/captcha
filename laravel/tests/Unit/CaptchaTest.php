@@ -17,7 +17,7 @@ class CaptchaTest extends UnitTestCase
     {
         $captcha = new Captcha();
 
-        $this->assertTrue(Captcha::check($captcha->sensitive(), $captcha->txt(), $captcha->hash()));
+        $this->assertTrue(Captcha::verify($captcha->getCode(), $captcha->hash(), $captcha->isSensitive()));
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class CaptchaTest extends UnitTestCase
     {
         $captcha = new Captcha();
 
-        $this->assertFalse(Captcha::check($captcha->sensitive(), $captcha->txt().'abc', $captcha->hash()));
+        $this->assertFalse(Captcha::verify($captcha->getCode().'abc', $captcha->hash(), $captcha->isSensitive()));
     }
 
     /** @test */
@@ -33,7 +33,7 @@ class CaptchaTest extends UnitTestCase
     {
         $captcha = new Captcha();
 
-        $this->assertFalse(Captcha::check($captcha->sensitive(), $captcha->txt(), $captcha->hash().'abc'));
+        $this->assertFalse(Captcha::verify($captcha->getCode(), $captcha->hash().'abc', $captcha->isSensitive()));
     }
 
     /** @test */
@@ -44,7 +44,7 @@ class CaptchaTest extends UnitTestCase
             'sensitive' => true,
         ]);
 
-        $this->assertFalse(Captcha::check($captcha->sensitive(), strtoupper($captcha->txt()), $captcha->hash()));
+        $this->assertFalse(Captcha::verify(strtoupper($captcha->getCode()), $captcha->hash(), $captcha->isSensitive()));
     }
 
     /** @test */

@@ -2,39 +2,39 @@
 
 namespace Zablose\Captcha;
 
-class Captcha
+final class Captcha
 {
     private Image $image;
-    private string $text;
+    private string $code;
 
     public function __construct(array $config = [])
     {
         $this->image = new Image($config);
-        $this->text  = $this->image->addRandomText();
+        $this->code  = $this->image->addRandomText();
     }
 
-    public function sensitive(): bool
+    public function isSensitive(): bool
     {
         return $this->image->config->sensitive;
     }
 
-    public function txt(): string
+    public function getCode(): string
     {
-        return $this->text;
+        return $this->code;
     }
 
     public function hash(): string
     {
-        return password_hash($this->sensitive() ? $this->text : strtolower($this->text), PASSWORD_BCRYPT);
+        return Password::hash($this->getCode(), $this->isSensitive());
     }
 
-    public static function check(bool $sensitive, string $captcha, string $hash): bool
+    public static function verify(string $captcha, string $hash, bool $sensitive = false): bool
     {
-        return password_verify($sensitive ? $captcha : strtolower($captcha), $hash);
+        return Password::verify($captcha, $hash, $sensitive);
     }
 
-    public function png(): string
+    public function toPng(): string
     {
-        return $this->image->addRandomLines()->addContrast()->sharpen()->invert()->blur()->png();
+        return $this->image->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur()->toPng();
     }
 }

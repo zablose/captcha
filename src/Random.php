@@ -2,7 +2,7 @@
 
 namespace Zablose\Captcha;
 
-class Random
+final class Random
 {
     const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
 
@@ -52,5 +52,10 @@ class Random
     public static function margin(int $space, int $size): int
     {
         return $size < $space ? mt_rand(0, $space - $size) : -1 * mt_rand(0, $size - $space);
+    }
+
+    public static function number(int $max): int
+    {
+        return mt_rand(0, $max);
     }
 }

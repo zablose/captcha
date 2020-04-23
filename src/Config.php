@@ -2,7 +2,7 @@
 
 namespace Zablose\Captcha;
 
-class Config
+final class Config
 {
     public string $assets_dir = __DIR__.'/../assets/';
     public string $characters = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';

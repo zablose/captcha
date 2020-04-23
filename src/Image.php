@@ -2,7 +2,7 @@
 
 namespace Zablose\Captcha;
 
-class Image
+final class Image
 {
     public Config $config;
 
@@ -13,29 +13,21 @@ class Image
     {
         $this->config = new Config($config);
 
-        $this->config->use_background_image
-            ? $this->createFromImage()->resize()
-            : $this->createFromColor();
+        $this->config->use_background_image ? $this->createFromImage() : $this->createFromColor();
     }
 
-    protected function createFromImage(): self
+    private function createFromImage(): self
     {
         $this->canvas = imagecreatefrompng(
             Random::value(Directory::files($this->config->assets_dir.'backgrounds', '.png'))
         );
 
-        return $this;
-    }
-
-    protected function createFromColor(): self
-    {
-        $this->canvas = imagecreatetruecolor($this->config->width, $this->config->height);
-        imagefill($this->canvas, 0, 0, $this->getColor($this->config->background_color));
+        $this->resize();
 
         return $this;
     }
 
-    protected function resize(): self
+    private function resize(): self
     {
         $dst_w = $this->config->width;
         $dst_h = $this->config->height;
@@ -51,7 +43,15 @@ class Image
         return $this;
     }
 
-    protected function getColor(string $code = ''): int
+    private function createFromColor(): self
+    {
+        $this->canvas = imagecreatetruecolor($this->config->width, $this->config->height);
+        imagefill($this->canvas, 0, 0, $this->getColor($this->config->background_color));
+
+        return $this;
+    }
+
+    private function getColor(string $code = ''): int
     {
         [$red, $green, $blue] = [255, 255, 255];
 
@@ -63,54 +63,7 @@ class Image
         return imagecolorallocate($this->canvas, $red, $green, $blue);
     }
 
-    public function addContrast(): self
-    {
-        if ($this->config->contrast <> 0) {
-            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->contrast);
-        }
-
-        return $this;
-    }
-
-    public function sharpen(): self
-    {
-        if ($this->config->sharpen) {
-            $min = $this->config->sharpen >= 10 ? $this->config->sharpen * -0.01 : 0;
-            $max = $this->config->sharpen * -0.025;
-            $abs = ((4 * $min + 4 * $max) * -1) + 1;
-            $div = 1;
-
-            $matrix = [
-                [$min, $max, $min],
-                [$max, $abs, $max],
-                [$min, $max, $min],
-            ];
-
-            imageconvolution($this->canvas, $matrix, $div, 0);
-        }
-
-        return $this;
-    }
-
-    public function invert(): self
-    {
-        if ($this->config->invert) {
-            imagefilter($this->canvas, IMG_FILTER_NEGATE);
-        }
-
-        return $this;
-    }
-
-    public function blur(): self
-    {
-        for ($i = 0; $i < intval($this->config->blur); $i++) {
-            imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
-        }
-
-        return $this;
-    }
-
-    public function addText(
+    private function addText(
         int $left,
         int $space_x,
         int $space_y,
@@ -164,29 +117,72 @@ class Image
         return $text;
     }
 
-    public function addLine(int $x1, int $y1, int $x2, int $y2, string $color): self
-    {
-        imageline($this->canvas, $x1, $y1, $x2, $y2, $this->getColor($color));
-
-        return $this;
-    }
-
     public function addRandomLines(): self
     {
         for ($i = 0; $i < $this->config->lines; $i++) {
-            $this->addLine(
-                mt_rand(0, $this->config->width),
-                mt_rand(0, $this->config->height),
-                mt_rand(0, $this->config->width),
-                mt_rand(0, $this->config->height),
-                Random::value($this->config->colors)
+            imageline(
+                $this->canvas,
+                Random::number($this->config->width),
+                Random::number($this->config->height),
+                Random::number($this->config->width),
+                Random::number($this->config->height),
+                $this->getColor(
+                    Random::value($this->config->colors)
+                )
             );
         }
 
         return $this;
     }
 
-    public function png(): string
+    public function addContrast(): self
+    {
+        if ($this->config->contrast <> 0) {
+            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->contrast);
+        }
+
+        return $this;
+    }
+
+    public function addSharpness(): self
+    {
+        if ($this->config->sharpen) {
+            $min = $this->config->sharpen >= 10 ? $this->config->sharpen * -0.01 : 0;
+            $max = $this->config->sharpen * -0.025;
+            $abs = ((4 * $min + 4 * $max) * -1) + 1;
+            $div = 1;
+
+            $matrix = [
+                [$min, $max, $min],
+                [$max, $abs, $max],
+                [$min, $max, $min],
+            ];
+
+            imageconvolution($this->canvas, $matrix, $div, 0);
+        }
+
+        return $this;
+    }
+
+    public function addInversion(): self
+    {
+        if ($this->config->invert) {
+            imagefilter($this->canvas, IMG_FILTER_NEGATE);
+        }
+
+        return $this;
+    }
+
+    public function addBlur(): self
+    {
+        for ($i = 0; $i < intval($this->config->blur); $i++) {
+            imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
+        }
+
+        return $this;
+    }
+
+    public function toPng(): string
     {
         ob_start();
         imagepng($this->canvas, null, $this->config->compression);

@@ -12,7 +12,7 @@ composer require zablose/captcha
 
 ## Usage with Laravel
 
-Check that new route is working, by visiting '://localhost/captcha/default'
+Check new route is working, by visiting '/captcha/default', '/captcha/small', '/captcha/no-angle', etc.
 
 You should see a captcha image like one of these:
 
@@ -55,19 +55,19 @@ Add validation rule to your controller, like in the code sample below:
 > If standard auth in use, overwrite method `validateLogin` in `./app/Http/Controllers/Auth/LoginController.php`.
 
 ```php
-    /**
-     * Validate the user login request.
-     *
-     * @param Request $request
-     */
-    protected function validateLogin(Request $request)
-    {
-        $this->validate($request, [
-            $this->username() => 'required',
-            'password'        => 'required',
-            'captcha'         => 'required|captcha',
-        ]);
-    }
+/**
+ * Validate the user login request.
+ *
+ * @param  Request  $request
+ */
+protected function validateLogin(Request $request)
+{
+    $this->validate($request, [
+        $this->username() => 'required',
+        'password' => 'required',
+        'captcha' => 'required|captcha',
+    ]);
+}
 ```
 
 ## Basic Usage
@@ -87,21 +87,21 @@ $captcha = new Captcha(['invert' => true, 'width' => 220]);
 
 $data = [
     'captcha' => [
-            'sensitive' => $captcha->sensitive(),
-            'hash'      => $captcha->hash(),
-        ]
+        'sensitive' => $captcha->isSensitive(),
+        'hash' => $captcha->hash(),
+    ],
 ];
 
 // Add $data to the session.
 
-echo $captcha->png();
+echo $captcha->toPng();
 
 ```
 
 To check captcha use:
 
 ```php
-Captcha::check($sensitive, $captcha, $hash);
+Captcha::verify($captcha, $hash);
 ```
 
 Feel the joy and happiness!

@@ -2,7 +2,7 @@
 
 namespace Zablose\Captcha;
 
-class Directory
+final class Directory
 {
     public static function files(string $path, string $extension): array
     {

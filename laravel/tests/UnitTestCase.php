@@ -10,7 +10,7 @@ abstract class UnitTestCase extends TestCase
 {
     protected function assertCaptcha(array $config = [], string $message = ''): void
     {
-        [$width, $height, $type] = getimagesizefromstring((new Captcha($config))->png());
+        [$width, $height, $type] = getimagesizefromstring((new Captcha($config))->toPng());
 
         $config = new Config($config);
 
