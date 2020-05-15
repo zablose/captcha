@@ -54,21 +54,19 @@ Add validation rule to your controller, like in the code sample below:
 
 > If standard auth in use, overwrite method `validateLogin` in `./app/Http/Controllers/Auth/LoginController.php`.
 
-```php
-/**
- * Validate the user login request.
- *
- * @param  Request  $request
- */
-protected function validateLogin(Request $request)
-{
-    $this->validate($request, [
-        $this->username() => 'required',
-        'password' => 'required',
-        'captcha' => 'required|captcha',
-    ]);
-}
-```
+    /**
+     * Validate the user login request.
+     *
+     * @param  Request  $request
+     */
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required',
+            'password' => 'required',
+            'captcha' => 'required|captcha',
+        ]);
+    }
 
 ## Basic Usage
 
@@ -95,14 +93,11 @@ $data = [
 // Add $data to the session.
 
 echo $captcha->toPng();
-
 ```
 
 To check captcha use:
 
-```php
-Captcha::verify($captcha, $hash);
-```
+    Captcha::verify($captcha, $hash);
 
 Feel the joy and happiness!
 
