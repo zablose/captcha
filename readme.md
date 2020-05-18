@@ -54,6 +54,15 @@ Add validation rule to your controller, like in the code sample below:
 
 > If standard auth in use, overwrite method `validateLogin` in `./app/Http/Controllers/Auth/LoginController.php`.
 
+```php
+<?php
+
+// ...
+
+class LoginController extends Controller
+{
+    // ...
+
     /**
      * Validate the user login request.
      *
@@ -67,6 +76,8 @@ Add validation rule to your controller, like in the code sample below:
             'captcha' => 'required|captcha',
         ]);
     }
+}
+```
 
 ## Basic Usage
 
@@ -97,7 +108,13 @@ echo $captcha->toPng();
 
 To check captcha use:
 
-    Captcha::verify($captcha, $hash);
+```php
+<?php
+
+    // ...
+
+    Captcha::verify('captcha', 'hash');
+```
 
 Feel the joy and happiness!
 
