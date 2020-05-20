@@ -38,7 +38,7 @@ services:
       - ./:/home/web/
     environment:
       - ADD_COMPOSER=true
-      - ADD_LARAVEL=false
+      - ADD_LARAVEL=true
       - ADD_NODEJS=false
       - APP_ROOT=/home/web/laravel
       - HOST_GROUP_ID=${ZDAMP_HOST_GROUP_ID:-1000}

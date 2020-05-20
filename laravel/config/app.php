@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Laravel\Ui\UiServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -170,11 +171,11 @@ return [
         /*
          * Application Service Providers...
          */
-        Zablose\Captcha\Laravel\App\Providers\AppServiceProvider::class,
-        Zablose\Captcha\Laravel\App\Providers\AuthServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        Zablose\Captcha\Laravel\App\Providers\EventServiceProvider::class,
-        Zablose\Captcha\Laravel\App\Providers\RouteServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
 
     ],
 

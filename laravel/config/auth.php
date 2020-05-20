@@ -68,7 +68,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Zablose\Captcha\Laravel\App\User::class,
+            'model' => App\User::class,
         ],
 
         // 'users' => [

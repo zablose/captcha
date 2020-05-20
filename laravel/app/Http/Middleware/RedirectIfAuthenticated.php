@@ -1,10 +1,10 @@
 <?php
 
-namespace Zablose\Captcha\Laravel\App\Http\Middleware;
+namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Zablose\Captcha\Laravel\App\Providers\RouteServiceProvider;
 
 class RedirectIfAuthenticated
 {

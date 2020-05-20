@@ -1,6 +1,6 @@
 <?php
 
-namespace Zablose\Captcha\Laravel\App\Exceptions;
+namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;

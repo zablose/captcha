@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Zablose\Captcha\Laravel\Tests\Unit;
+namespace Tests\Unit;
 
-use Zablose\Captcha\Laravel\Tests\UnitTestCase;
+use Tests\UnitTestCase;
 use Zablose\Captcha\Random;
 
 class RandomTest extends UnitTestCase

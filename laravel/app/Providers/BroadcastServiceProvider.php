@@ -1,6 +1,6 @@
 <?php
 
-namespace Zablose\Captcha\Laravel\App\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
