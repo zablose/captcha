@@ -1,4 +1,5 @@
 /coverage-report/
+/laravel/.env
 /vendor/
 /.idea/
 /composer.lock

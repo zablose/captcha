@@ -8,5 +8,7 @@ php:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
+  - cp laravel/.env.example laravel/.env
+  - php laravel/artisan key:generate
 
 script: phpunit
