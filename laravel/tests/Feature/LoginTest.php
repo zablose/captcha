@@ -1,29 +1,75 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Tests\FeatureTestCase;
 use Zablose\Captcha\Captcha;
 
 class LoginTest extends FeatureTestCase
 {
-    public function user_can_login()
+    /** @test */
+    public function login_with_captcha()
     {
+        $user = $this->createUser();
+
         $captcha = new Captcha();
 
         Session::put('captcha', [
             'sensitive' => $captcha->isSensitive(),
-            'hash'      => $captcha->hash(),
+            'hash' => $captcha->hash(),
         ]);
 
         $this
             ->post('/login', [
-                'email'    => 'zablose@gmail.com',
-                'password' => 'qwerty',
-                'captcha'  => $captcha->getCode(),
+                'email' => $user->email,
+                'password' => 'password',
+                'captcha' => $captcha->getCode(),
             ])
-            ->assertStatus(Response::HTTP_FOUND);
+            ->assertRedirect();
+
+        $this->get('/home')->assertOk();
+    }
+
+    /** @test */
+    public function fail_without_captcha()
+    {
+        $user = $this->createUser();
+
+        $this
+            ->post('/login', [
+                'email' => $user->email,
+                'password' => 'password',
+            ])
+            ->assertRedirect();
+
+        $this
+            ->get('/home')
+            ->assertRedirect();
+    }
+
+    /** @test */
+    public function fail_if_captcha_is_wrong()
+    {
+        $user = $this->createUser();
+
+        $captcha = new Captcha();
+
+        Session::put('captcha', [
+            'sensitive' => $captcha->isSensitive(),
+            'hash' => $captcha->hash(),
+        ]);
+
+        $this
+            ->post('/login', [
+                'email' => $user->email,
+                'password' => 'password',
+                'captcha' => $captcha->getCode().'xyz',
+            ])
+            ->assertRedirect();
+
+        $this
+            ->get('/home')
+            ->assertRedirect();
     }
 }

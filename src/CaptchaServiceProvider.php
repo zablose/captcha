@@ -27,7 +27,7 @@ class CaptchaServiceProvider extends ServiceProvider
         $validator = $this->app['validator'];
         $validator->extend(
             'captcha',
-            function ($attribute, $value, $parameters)
+            function ($attribute, $captcha, $parameters)
             {
                 if (! Session::has('captcha')) {
                     return false;
@@ -38,7 +38,7 @@ class CaptchaServiceProvider extends ServiceProvider
 
                 Session::remove('captcha');
 
-                return Captcha::check($sensitive, $value, $hash);
+                return Captcha::verify($captcha, $hash, $sensitive);
             },
             'The :attribute does not match.'
         );
