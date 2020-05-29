@@ -18,14 +18,14 @@ Check new route is working, by visiting '/captcha' or '/captcha/{type}'.
 
 | Captcha | Type | Dev Link |
 | --- | --- | --- |
-| ![](readme/images/captcha-default.png) | default | [](https://captcha.zdev:44302/captcha/default) |
-| ![](readme/images/captcha-small.png) | small | [](https://captcha.zdev:44302/captcha/small) |
-| ![](readme/images/captcha-invert.png) | invert | [](https://captcha.zdev:44302/captcha/invert) |
-| ![](readme/images/captcha-sharpen.png) | sharpen | [](https://captcha.zdev:44302/captcha/sharpen) |
-| ![](readme/images/captcha-blur.png) | blur | [](https://captcha.zdev:44302/captcha/blur) |
-| ![](readme/images/captcha-contrast.png) | contrast | [](https://captcha.zdev:44302/captcha/contrast) |
-| ![](readme/images/captcha-no-angle.png) | no-angle | [](https://captcha.zdev:44302/captcha/no-angle) |
-| ![](readme/images/captcha-bg-color.png) | bg-color | [](https://captcha.zdev:44302/captcha/bg-color) |
+| ![](readme/images/captcha-default.png) | default | [/captcha/default](https://captcha.zdev:44302/captcha/default) |
+| ![](readme/images/captcha-small.png) | small | [/captcha/small](https://captcha.zdev:44302/captcha/small) |
+| ![](readme/images/captcha-invert.png) | invert | [/captcha/invert](https://captcha.zdev:44302/captcha/invert) |
+| ![](readme/images/captcha-sharpen.png) | sharpen | [/captcha/sharpen](https://captcha.zdev:44302/captcha/sharpen) |
+| ![](readme/images/captcha-blur.png) | blur | [/captcha/blur](https://captcha.zdev:44302/captcha/blur) |
+| ![](readme/images/captcha-contrast.png) | contrast | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast) |
+| ![](readme/images/captcha-no-angle.png) | no-angle | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle) |
+| ![](readme/images/captcha-bg-color.png) | bg-color | [/captcha/bg-color](https://captcha.zdev:44302/captcha/bg-color) |
 
 Look at the [config](./config/captcha.php) file for more details.
 
