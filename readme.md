@@ -1,6 +1,6 @@
 # Captcha
 
-[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
+[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=master)](https://travis-ci.org/zablose/captcha)
 
 Simple captcha with optional goodies for Laravel.
 
@@ -14,7 +14,7 @@ composer require zablose/captcha
 
 ### New Route & Captcha Types
 
-Check new route is working, by visiting '/captcha' or '/captcha/{type}'.
+Check new route is working, by visiting `/captcha` or `/captcha/{type}`.
 
 | Captcha | Type | Dev Link |
 | --- | --- | --- |
@@ -80,13 +80,41 @@ Feel the joy and happiness!
 
 ## Development
 
+> Check submodule [readme](https://github.com/zablose/docker-damp/blob/master/readme.md) for more details about
+> development environment used.
+
+### Hosts
+
+Append to `/etc/hosts`.
+
+```
+127.0.0.1       captcha.zdev
+127.0.0.1       www.captcha.zdev
+```
+
+### Env
+
+Append to `~/.bashrc`.
+   
+   ```bash
+   export \
+       ZDAMP_HOST_USER_ID=1000 \
+       ZDAMP_HOST_USER_NAME= \
+       ZDAMP_HOST_GROUP_ID=1000 \
+       ZDAMP_HOST_GROUP_NAME= \
+       ZDAMP_DB_PASSWORD=
+   ```
+
+### To Run PHPUnit
+
     $ git clone https://github.com/zablose/captcha.git
     $ cd captcha
     $ git submodule update
 
     $ docker-compose -p zdev up -d
     $ docker exec -it captcha-damp bash
-    (container)$ phpunit
+    
+    (captcha-damp)$ phpunit
 
 ## License
 
