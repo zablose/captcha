@@ -4,30 +4,32 @@ namespace Zablose\Captcha;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class CaptchaServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/captcha.php', 'captcha');
 
-    /**
-     * Boot the service provider.
-     */
-    public function boot()
+        require __DIR__.'/../helpers.php';
+    }
+
+    public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../laravel/config/captcha.php' => config_path('captcha.php'),
+            __DIR__.'/../config/captcha.php' => config_path('captcha.php'),
         ], 'config');
 
-        $this->loadRoutesFrom(__DIR__ . '/../laravel/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/captcha.php');
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
         $validator->extend(
             'captcha',
-            function ($attribute, $value, $parameters)
+            function ($attribute, $captcha, $parameters)
             {
-                if (! Session::has('captcha'))
-                {
+                if (! Session::has('captcha')) {
                     return false;
                 }
 
@@ -36,12 +38,9 @@ class CaptchaServiceProvider extends ServiceProvider
 
                 Session::remove('captcha');
 
-                return Captcha::check($sensitive, $value, $hash);
+                return Captcha::verify($captcha, $hash, $sensitive);
             },
             'The :attribute does not match.'
         );
-
-        require_once __DIR__ . '/../laravel/helpers.php';
     }
-
 }

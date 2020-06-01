@@ -1,12 +1,11 @@
 {
     "name": "zablose/captcha",
-    "description": "Captcha",
+    "description": "Simple captcha with optional goodies for Laravel.",
     "keywords": [
         "captcha",
         "security",
         "php",
         "laravel",
-        "laravel5",
         "spam",
         "bot"
     ],
@@ -18,21 +17,36 @@
         }
     ],
     "require": {
-        "php": "~7.1",
+        "php": "~7.4",
         "ext-gd": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0.0"
+        "facade/ignition": "^2.0.4",
+        "fideloper/proxy": "^4.3.0",
+        "fruitcake/laravel-cors": "^1.0.6",
+        "fzaninotto/faker": "^1.9.1",
+        "guzzlehttp/guzzle": "^6.5.3",
+        "laravel/framework": "^7.12.0",
+        "laravel/tinker": "^2.4.0",
+        "laravel/ui": "^2.0.3",
+        "mockery/mockery": "^1.4.0",
+        "nunomaduro/collision": "^4.2.0",
+        "phpunit/phpunit": "^9.1.4"
     },
     "autoload": {
         "psr-4": {
-            "Zablose\\Captcha\\": ""
+            "Zablose\\Captcha\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Zablose\\Captcha\\Tests\\": "tests/"
-        }
+            "App\\": "laravel/app/",
+            "Tests\\": "laravel/tests/"
+        },
+        "classmap": [
+            "laravel/database/factories",
+            "laravel/database/seeds"
+        ]
     },
     "extra": {
         "laravel": {

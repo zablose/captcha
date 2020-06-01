@@ -1,13 +1,14 @@
+dist: bionic
+
 language: php
 
-sudo: false
-dist: trusty
-
 php:
-  - 7.1
+  - 7.4
 
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
+  - cp laravel/.env.example laravel/.env
+  - php laravel/artisan key:generate
 
 script: phpunit

@@ -3,16 +3,16 @@
 return [
 
     'default' => [
-        'assets_dir'           => __DIR__ . '/../vendor/zablose/captcha/assets/',
-        'characters'           => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}',
-        'length'               => 5,
-        'width'                => 160,
-        'height'               => 60,
-        'compression'          => 9,
-        'lines'                => 10,
+        'assets_dir' => __DIR__.'/../../assets/',
+        'characters' => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}',
+        'length' => 5,
+        'width' => 160,
+        'height' => 60,
+        'compression' => 9,
+        'lines' => 10,
         'use_background_image' => true,
-        'background_color'     => '#FFFFFF',
-        'colors'               => [
+        'background_color' => '#FFFFFF',
+        'colors' => [
             '#000000', // Black
             '#A60F0F', // Red
             '#6E3200', // Brown
@@ -23,17 +23,17 @@ return [
             '#0D5F09', // Green
             '#9F9000', // Yellow
         ],
-        'sensitive'            => false,
-        'sharpen'              => 0,
-        'blur'                 => 0,
-        'invert'               => false,
-        'contrast'             => 0,
-        'angle'                => 45,
+        'sensitive' => false,
+        'sharpen' => 0,
+        'blur' => 0,
+        'invert' => false,
+        'contrast' => 0,
+        'angle' => 45,
     ],
 
     'small' => [
         'length' => 3,
-        'width'  => 90,
+        'width' => 90,
         'height' => 40,
     ],
 

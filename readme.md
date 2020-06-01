@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=master)](https://travis-ci.org/zablose/captcha)
 
-> Originally based on [mewebstudio/captcha](https://github.com/mewebstudio/captcha)
+Simple captcha with optional goodies for Laravel.
 
 ## Installation
 
@@ -12,70 +12,40 @@ composer require zablose/captcha
 
 ## Usage with Laravel
 
-Check that new route is working, by visiting '://localhost/captcha/default'
+### New Route & Captcha Types
 
-You have to see a captcha image like one of these:
+Check new route is working, by visiting `/captcha` or `/captcha/{type}`.
 
-![](readme/images/captcha-default.png)
-![](readme/images/captcha-small.png)
-![](readme/images/captcha-invert.png)
-![](readme/images/captcha-sharpen.png)
-![](readme/images/captcha-blur.png)
-![](readme/images/captcha-contrast.png)
-![](readme/images/captcha-no-angle.png)
-![](readme/images/captcha-bg-color.png)
+| Captcha | Type | Dev Link |
+| --- | --- | --- |
+| ![](readme/images/captcha-default.png) | default | [/captcha/default](https://captcha.zdev:44302/captcha/default) |
+| ![](readme/images/captcha-small.png) | small | [/captcha/small](https://captcha.zdev:44302/captcha/small) |
+| ![](readme/images/captcha-invert.png) | invert | [/captcha/invert](https://captcha.zdev:44302/captcha/invert) |
+| ![](readme/images/captcha-sharpen.png) | sharpen | [/captcha/sharpen](https://captcha.zdev:44302/captcha/sharpen) |
+| ![](readme/images/captcha-blur.png) | blur | [/captcha/blur](https://captcha.zdev:44302/captcha/blur) |
+| ![](readme/images/captcha-contrast.png) | contrast | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast) |
+| ![](readme/images/captcha-no-angle.png) | no-angle | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle) |
+| ![](readme/images/captcha-bg-color.png) | bg-color | [/captcha/bg-color](https://captcha.zdev:44302/captcha/bg-color) |
 
-Add captcha to your form, like in the code sample below:
+Look at the [config](./config/captcha.php) file for more details.
 
-> If standard auth is in use, you may add code sample to `./resources/views/auth/login.blade.php`.
+### Login Form
 
-```blade
-    <div class="form-group">
-        <div class="col-md-6 col-md-offset-4">
-            <label>
-                <img src="{!! captcha_url() !!}" alt="captcha">
-            </label>
-        </div>
-    </div>
-    <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Captcha</label>
-        <div class="col-md-6">
-            <input type="text" class="form-control" name="captcha" autocomplete="off">
-            @if ($errors->has('captcha'))
-            <span class="help-block">
-                <strong>{{ $errors->first('captcha') }}</strong>
-            </span>
-            @endif
-        </div>
-    </div>
-```
+If standard auth is in use, add captcha to your login form like in
+[login.blade.php](./laravel/resources/views/auth/login.blade.php) template.
 
-Add validation rule to your controller, like in the code sample below:
+### Validation
 
-> If standard auth in use, overwrite method `validateLogin` in `./app/Http/Controllers/Auth/LoginController.php`.
-
-```php
-    /**
-     * Validate the user login request.
-     *
-     * @param Request $request
-     */
-    protected function validateLogin(Request $request)
-    {
-        $this->validate($request, [
-            $this->username() => 'required',
-            'password'        => 'required',
-            'captcha'         => 'required|captcha',
-        ]);
-    }
-```
+If standard auth is in use, overwrite method `validateLogin` like in
+[LoginController](./laravel/app/Http/Controllers/Auth/LoginController.php) class.
 
 ## Basic Usage
 
 In case you are not happy Laravel user, you may still use this package.
 
-To create captcha, add details to the session and output the image. A code may look like:
+Create captcha, add details to the session and output the image.
 
+A code may look like:
 ```php
 <?php
 
@@ -87,24 +57,64 @@ $captcha = new Captcha(['invert' => true, 'width' => 220]);
 
 $data = [
     'captcha' => [
-            'sensitive' => $captcha->sensitive(),
-            'hash'      => $captcha->hash(),
-        ]
+        'sensitive' => $captcha->isSensitive(),
+        'hash' => $captcha->hash(),
+    ],
 ];
 
 // Add $data to the session.
 
-echo $captcha->png();
-
+echo $captcha->toPng();
 ```
 
 To check captcha use:
-
 ```php
-Captcha::check($sensitive, $captcha, $hash);
+<?php
+
+    // ...
+
+    Captcha::verify('captcha', 'hash');
 ```
 
 Feel the joy and happiness!
+
+## Development
+
+> Check submodule [readme](https://github.com/zablose/docker-damp/blob/master/readme.md) for more details about
+> development environment used.
+
+### Hosts
+
+Append to `/etc/hosts`.
+
+```
+127.0.0.1       captcha.zdev
+127.0.0.1       www.captcha.zdev
+```
+
+### Env
+
+Append to `~/.bashrc`.
+   
+   ```bash
+   export \
+       ZDAMP_HOST_USER_ID=1000 \
+       ZDAMP_HOST_USER_NAME= \
+       ZDAMP_HOST_GROUP_ID=1000 \
+       ZDAMP_HOST_GROUP_NAME= \
+       ZDAMP_DB_PASSWORD=
+   ```
+
+### To Run PHPUnit
+
+    $ git clone https://github.com/zablose/captcha.git
+    $ cd captcha
+    $ git submodule update
+
+    $ docker-compose -p zdev up -d
+    $ docker exec -it captcha-damp bash
+    
+    (captcha-damp)$ phpunit
 
 ## License
 
