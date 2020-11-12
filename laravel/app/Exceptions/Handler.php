@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMissingFieldTypeInspection */
 
 namespace App\Exceptions;
 
