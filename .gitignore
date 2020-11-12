@@ -1,5 +1,6 @@
 /coverage-report/
-/laravel/.env
 /vendor/
 /.idea/
+/.env
+/.phpunit.result.cache
 /composer.lock
