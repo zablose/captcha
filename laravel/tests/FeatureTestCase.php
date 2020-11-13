@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase;
 
@@ -13,6 +13,6 @@ abstract class FeatureTestCase extends TestCase
 
     protected function createUser(array $attributes = []): User
     {
-        return factory(User::class)->create($attributes);
+        return User::factory()->create($attributes);
     }
 }

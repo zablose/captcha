@@ -92,26 +92,21 @@ Append to `/etc/hosts`.
 127.0.0.1       www.captcha.zdev
 ```
 
-### Env
+### Quick Start
 
-Append to `~/.bashrc`.
-   
-   ```bash
-   export \
-       ZDAMP_HOST_USER_ID=1000 \
-       ZDAMP_HOST_USER_NAME= \
-       ZDAMP_HOST_GROUP_ID=1000 \
-       ZDAMP_HOST_GROUP_NAME= \
-       ZDAMP_DB_PASSWORD=
-   ```
-
-### To Run PHPUnit
-
-    $ git clone https://github.com/zablose/captcha.git
+    $ git clone -b 'dev' --single-branch --depth 1 https://github.com/zablose/captcha.git captcha
     $ cd captcha
-    $ git submodule update
-
+    $ git submodule update --init
+    
+    # Copy env file, then ammend it to your needs.
+    $ cp .env.example .env
+    
     $ docker-compose -p zdev up -d
+    
+    # To see post-script logs, while container is starting.
+    $ tail -f docker-damp/logs/all.log
+    
+    # To enter container, using Bash shell.
     $ docker exec -it captcha-damp bash
     
     (captcha-damp)$ phpunit
