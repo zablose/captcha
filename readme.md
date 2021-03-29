@@ -68,8 +68,11 @@ echo $captcha->toPng();
 ```
 
 To check captcha use:
+
 ```php
 <?php
+
+    use Zablose\Captcha\Captcha;
 
     // ...
 

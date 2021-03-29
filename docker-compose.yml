@@ -23,7 +23,7 @@ services:
         - ARG_USER_ID=${DAMP_USER_ID}
         - ARG_USER_NAME=${DAMP_USER_NAME}
         - ARG_WEB_DIR=${DAMP_WEB_DIR}
-    image: zablose-damp:10.6-php7.4
+    image: zablose-damp:10.8-php8.0
     container_name: captcha-damp
     ports:
       - '${DAMP_PORT_HTTP}:80'
@@ -36,7 +36,7 @@ services:
       - ./.env:/home/${DAMP_USER_NAME}/.env
       - $HOME/.composer/cache/:/home/${DAMP_USER_NAME}/.composer/cache/
       - ./:${DAMP_WEB_DIR}/
-      - ./laravel/app.sh:/home/${DAMP_USER_NAME}/post-setup.sh
+      - ./post-setup.sh:/home/${DAMP_USER_NAME}/post-setup.sh
     logging:
       driver: syslog
       options:
