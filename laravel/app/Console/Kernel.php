@@ -1,4 +1,8 @@
-<?php /** @noinspection PhpMissingFieldTypeInspection */
+<?php
+
+/**
+ * @noinspection PhpMissingFieldTypeInspection
+ */
 
 namespace App\Console;
 

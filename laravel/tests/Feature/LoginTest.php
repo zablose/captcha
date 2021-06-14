@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -15,17 +17,23 @@ class LoginTest extends FeatureTestCase
 
         $captcha = new Captcha();
 
-        Session::put('captcha', [
-            'sensitive' => $captcha->isSensitive(),
-            'hash' => $captcha->hash(),
-        ]);
+        Session::put(
+            'captcha',
+            [
+                'sensitive' => $captcha->isSensitive(),
+                'hash' => $captcha->hash(),
+            ]
+        );
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-                'captcha' => $captcha->getCode(),
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => $captcha->getCode(),
+                ]
+            )
             ->assertRedirect();
 
         $this->get('/home')->assertOk();
@@ -37,10 +45,13 @@ class LoginTest extends FeatureTestCase
         $user = $this->createUser();
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                ]
+            )
             ->assertRedirect();
 
         $this
@@ -55,17 +66,23 @@ class LoginTest extends FeatureTestCase
 
         $captcha = new Captcha();
 
-        Session::put('captcha', [
-            'sensitive' => $captcha->isSensitive(),
-            'hash' => $captcha->hash(),
-        ]);
+        Session::put(
+            'captcha',
+            [
+                'sensitive' => $captcha->isSensitive(),
+                'hash' => $captcha->hash(),
+            ]
+        );
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-                'captcha' => $captcha->getCode().'xyz',
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => $captcha->getCode().'xyz',
+                ]
+            )
             ->assertRedirect();
 
         $this

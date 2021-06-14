@@ -21,6 +21,7 @@
         "ext-gd": "*"
     },
     "require-dev": {
+        "ext-pdo": "*",
         "facade/ignition": "^2.10.2",
         "fideloper/proxy": "^4.4.1",
         "fakerphp/faker": "^1.14.1",

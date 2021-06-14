@@ -1,4 +1,8 @@
-<?php /** @noinspection PhpMissingFieldTypeInspection */
+<?php
+
+/**
+ * @noinspection PhpMissingFieldTypeInspection
+ */
 
 namespace App\Exceptions;
 
@@ -34,8 +38,11 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        $this->reportable(
+            function (Throwable $e)
+            {
+                //
+            }
+        );
     }
 }

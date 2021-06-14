@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @noinspection PhpArrayShapeAttributeCanBeAddedInspection
+ */
+
 namespace Database\Factories;
 
 use App\Models\User;
@@ -20,7 +24,7 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name(),
@@ -30,17 +34,14 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
+
     /**
      * Indicate that the model's email address should be unverified.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
-    public function unverified()
+    public function unverified(): Factory
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
+        return $this->state(fn(array $attributes) => ['email_verified_at' => null]);
     }
 }
