@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Zablose\Captcha\Color;
+
 return [
 
     'default' => [
@@ -13,18 +15,8 @@ return [
         'compression' => 9,
         'lines' => 10,
         'use_background_image' => true,
-        'background_color' => '#FFFFFF',
-        'colors' => [
-            '#000000', // Black
-            '#A60F0F', // Red
-            '#6E3200', // Brown
-            '#FF6804', // Orange
-            '#A50065', // Pink
-            '#342A99', // Dark blue
-            '#126565', // Light blue
-            '#0D5F09', // Green
-            '#9F9000', // Yellow
-        ],
+        'background_color' => Color::WHITE,
+        'colors' => Color::allButWhite(),
         'sensitive' => false,
         'sharpen' => 0,
         'blur' => 0,

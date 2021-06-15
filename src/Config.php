@@ -17,18 +17,8 @@ final class Config
 
     public int $lines = 10;
     public bool $use_background_image = true;
-    public string $background_color = '#FFFFFF';
-    public array $colors = [
-        '#000000', // Black
-        '#A60F0F', // Red
-        '#6E3200', // Brown
-        '#FF6804', // Orange
-        '#A50065', // Pink
-        '#342A99', // Dark blue
-        '#126565', // Light blue
-        '#0D5F09', // Green
-        '#9F9000', // Yellow
-    ];
+    public string $background_color = Color::WHITE;
+    public array $colors;
     public bool $sensitive = false;
 
     /** Between 0 and 100 */
@@ -46,6 +36,8 @@ final class Config
 
     public function __construct(array $config)
     {
+        $this->colors = Color::allButWhite();
+
         foreach ($config as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
