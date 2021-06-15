@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
@@ -72,8 +74,7 @@ final class Image
         int $size,
         string $color,
         int $angle
-    ): self
-    {
+    ): self {
         $box = imagettfbbox($size, $angle, $font, $text);
 
         $min_x = min($box[0], $box[2], $box[4], $box[6]);
@@ -82,7 +83,7 @@ final class Image
         $min_y = min($box[1], $box[3], $box[5], $box[7]);
         $max_y = max($box[1], $box[3], $box[5], $box[7]);
 
-        $width  = $max_x - $min_x;
+        $width = $max_x - $min_x;
         $height = $max_y - $min_y;
 
         $x = $left - $min_x + Random::margin($space_x, $width);
@@ -95,7 +96,7 @@ final class Image
 
     public function addRandomText(): string
     {
-        $text  = '';
+        $text = '';
         $width = intval($this->config->width / $this->config->length);
         $fonts = Directory::files($this->config->assets_dir.'fonts', '.ttf');
 

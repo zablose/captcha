@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
@@ -10,7 +12,7 @@ final class Captcha
     public function __construct(array $config = [])
     {
         $this->image = new Image($config);
-        $this->code  = $this->image->addRandomText();
+        $this->code = $this->image->addRandomText();
     }
 
     public function isSensitive(): bool

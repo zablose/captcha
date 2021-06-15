@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
@@ -8,7 +10,7 @@ final class Directory
     {
         $files = [];
 
-        foreach (scandir($path) as $key => $item) {
+        foreach (scandir($path) as $item) {
             if (stripos($item, $extension) > 1) {
                 $files[] = $path.'/'.$item;
             }

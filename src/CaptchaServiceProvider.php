@@ -17,9 +17,7 @@ class CaptchaServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/captcha.php' => config_path('captcha.php'),
-        ], 'config');
+        $this->publishes([__DIR__.'/../config/captcha.php' => config_path('captcha.php')], 'config');
 
         $this->loadRoutesFrom(__DIR__.'/../routes/captcha.php');
 
@@ -27,14 +25,14 @@ class CaptchaServiceProvider extends ServiceProvider
         $validator = $this->app['validator'];
         $validator->extend(
             'captcha',
-            function ($attribute, $captcha, $parameters)
+            function ($attribute, $captcha)
             {
                 if (! Session::has('captcha')) {
                     return false;
                 }
 
                 $sensitive = Session::get('captcha.sensitive');
-                $hash      = Session::get('captcha.hash');
+                $hash = Session::get('captcha.hash');
 
                 Session::remove('captcha');
 
