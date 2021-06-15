@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
+use GdImage;
+
 final class Image
 {
     public Config $config;
 
-    /** @var resource */
-    private $canvas;
+    private GdImage $canvas;
 
     public function __construct(array $config)
     {
         $this->config = new Config($config);
 
-        $this->config->use_background_image ? $this->createFromImage() : $this->createFromColor();
+        $this->config->use_background_image
+            ? $this->setCanvasFromPng()->resize()
+            : $this->setCanvasFromColor();
     }
 
-    private function createFromImage(): self
+    private function setCanvasFromPng(): self
     {
         $this->canvas = imagecreatefrompng(
             Random::value(Directory::files($this->config->assets_dir.'backgrounds', '.png'))
         );
 
-        $this->resize();
-
         return $this;
     }
 
-    private function resize(): self
+    private function resize(): void
     {
         $dst_w = $this->config->width;
         $dst_h = $this->config->height;
@@ -41,16 +42,12 @@ final class Image
             imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
             $this->canvas = $dst_image;
         }
-
-        return $this;
     }
 
-    private function createFromColor(): self
+    private function setCanvasFromColor(): void
     {
         $this->canvas = imagecreatetruecolor($this->config->width, $this->config->height);
         imagefill($this->canvas, 0, 0, $this->getColor($this->config->background_color));
-
-        return $this;
     }
 
     private function getColor(string $code = ''): int
@@ -74,7 +71,7 @@ final class Image
         int $size,
         string $color,
         int $angle
-    ): self {
+    ): void {
         $box = imagettfbbox($size, $angle, $font, $text);
 
         $min_x = min($box[0], $box[2], $box[4], $box[6]);
@@ -90,8 +87,6 @@ final class Image
         $y = $space_y - $max_y - Random::margin($space_y, $height);
 
         imagettftext($this->canvas, $size, $angle, $x, $y, $this->getColor($color), $font, $text);
-
-        return $this;
     }
 
     public function addRandomText(): string
@@ -176,7 +171,7 @@ final class Image
 
     public function addBlur(): self
     {
-        for ($i = 0; $i < intval($this->config->blur); $i++) {
+        for ($i = 0; $i < $this->config->blur; $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
 

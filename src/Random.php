@@ -21,7 +21,7 @@ final class Random
         return $string;
     }
 
-    public static function lower(int $length, string $characters = self::CHARACTERS)
+    public static function lower(int $length, string $characters = self::CHARACTERS): string
     {
         return strtolower(self::string($length, $characters));
     }
@@ -31,12 +31,7 @@ final class Random
         return $characters[array_rand(str_split($characters))];
     }
 
-    /**
-     * @param  array  $data
-     *
-     * @return mixed
-     */
-    public static function value(array $data)
+    public static function value(array $data): mixed
     {
         return $data[array_rand($data)];
     }
