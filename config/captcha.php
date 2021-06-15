@@ -3,12 +3,13 @@
 declare(strict_types=1);
 
 use Zablose\Captcha\Color;
+use Zablose\Captcha\Config;
 
 return [
 
     'default' => [
-        'assets_dir' => __DIR__.'/../vendor/zablose/captcha/assets/',
-        'characters' => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}',
+        'assets_dir' => Config::getAssetsDir(),
+        'characters' => Config::CHARACTERS,
         'length' => 5,
         'width' => 160,
         'height' => 60,

@@ -12,7 +12,7 @@ final class Directory
 
         foreach (scandir($path) as $item) {
             if (stripos($item, $extension) > 1) {
-                $files[] = $path.'/'.$item;
+                $files[] = $path.DIRECTORY_SEPARATOR.$item;
             }
         }
 

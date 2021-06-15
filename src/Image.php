@@ -24,7 +24,7 @@ final class Image
     private function setCanvasFromPng(): self
     {
         $this->canvas = imagecreatefrompng(
-            Random::value(Directory::files($this->config->assets_dir.'backgrounds', '.png'))
+            Random::value(Directory::files($this->config->assets_dir.DIRECTORY_SEPARATOR.'backgrounds', '.png'))
         );
 
         return $this;
@@ -93,7 +93,7 @@ final class Image
     {
         $text = '';
         $width = intval($this->config->width / $this->config->length);
-        $fonts = Directory::files($this->config->assets_dir.'fonts', '.ttf');
+        $fonts = Directory::files($this->config->assets_dir.DIRECTORY_SEPARATOR.'fonts', '.ttf');
 
         for ($i = 0; $i < $this->config->length; $i++) {
             $this->addText(

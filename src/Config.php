@@ -6,8 +6,11 @@ namespace Zablose\Captcha;
 
 final class Config
 {
-    public string $assets_dir = __DIR__.'/../assets/';
-    public string $characters = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
+    public const ASSETS_PATH = 'vendor'.DIRECTORY_SEPARATOR.'zablose'.DIRECTORY_SEPARATOR.'captcha'.DIRECTORY_SEPARATOR.'assets';
+    public const CHARACTERS = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
+
+    public string $assets_dir;
+    public string $characters = self::CHARACTERS;
     public int $length = 5;
     public int $width = 160;
     public int $height = 60;
@@ -36,6 +39,7 @@ final class Config
 
     public function __construct(array $config)
     {
+        $this->assets_dir = self::getAssetsDir();
         $this->colors = Color::allButWhite();
 
         foreach ($config as $key => $value) {
@@ -43,5 +47,24 @@ final class Config
                 $this->$key = $value;
             }
         }
+    }
+
+    public static function getAssetsDir(): string
+    {
+        $one_dir_up = '..'.DIRECTORY_SEPARATOR;
+        $base_dir = __DIR__.DIRECTORY_SEPARATOR.$one_dir_up.$one_dir_up.$one_dir_up;
+
+        $vendor_assets_dir = $base_dir.self::ASSETS_PATH;
+        $published_assets_dir = $base_dir.'resources'.DIRECTORY_SEPARATOR.self::ASSETS_PATH;
+
+        if (is_dir($vendor_assets_dir)) {
+            return $vendor_assets_dir;
+        }
+
+        if (is_dir($published_assets_dir)) {
+            return $published_assets_dir;
+        }
+
+        return __DIR__.DIRECTORY_SEPARATOR.$one_dir_up.'assets';
     }
 }
