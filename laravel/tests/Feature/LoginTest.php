@@ -60,6 +60,27 @@ class LoginTest extends FeatureTestCase
     }
 
     /** @test */
+    public function fail_without_captcha_in_session()
+    {
+        $user = $this->createUser();
+
+        $this
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => 'captcha',
+                ]
+            )
+            ->assertRedirect();
+
+        $this
+            ->get('/home')
+            ->assertRedirect();
+    }
+
+    /** @test */
     public function fail_if_captcha_is_wrong()
     {
         $user = $this->createUser();
