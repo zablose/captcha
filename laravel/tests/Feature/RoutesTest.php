@@ -54,4 +54,27 @@ class RoutesTest extends FeatureTestCase
     {
         $this->post('/logout')->assertRedirect('/');
     }
+
+    /** @test */
+    public function captcha()
+    {
+        $types = [
+            'default',
+            'small',
+            'invert',
+            'sharpen',
+            'blur',
+            'contrast',
+            'no-angle',
+            'bg-color',
+        ];
+
+        foreach ($types as $type) {
+            $this->assertPng(
+                $this->get('/captcha/'.$type)->assertOk()->getContent(),
+                config("captcha.$type.width") ?? config('captcha.default.width'),
+                config("captcha.$type.height") ?? config('captcha.default.height')
+            );
+        }
+    }
 }

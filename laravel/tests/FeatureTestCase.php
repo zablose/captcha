@@ -15,4 +15,18 @@ abstract class FeatureTestCase extends TestCase
     {
         return User::factory()->create($attributes);
     }
+
+    protected function assertPng(
+        string $image,
+        int $expected_width,
+        int $expected_height,
+        string $message = ''
+    ): void {
+        [$width, $height, $type] = getimagesizefromstring($image);
+
+        $this->assertTrue(
+            IMAGETYPE_PNG === $type && $expected_width === $width && $expected_height === $height,
+            $message
+        );
+    }
 }
