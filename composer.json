@@ -22,16 +22,16 @@
     },
     "require-dev": {
         "ext-pdo": "*",
-        "facade/ignition": "^2.10.2",
+        "facade/ignition": "^2.11.2",
         "fideloper/proxy": "^4.4.1",
-        "fakerphp/faker": "^1.14.1",
+        "fakerphp/faker": "^1.15.1",
         "guzzlehttp/guzzle": "^7.3.0",
-        "laravel/framework": "^8.46.0",
+        "laravel/framework": "^8.51.0",
         "laravel/tinker": "^2.6.1",
         "laravel/ui": "^3.3.0",
         "mockery/mockery": "^1.4.3",
-        "nunomaduro/collision": "^5.4.0",
-        "phpunit/phpunit": "^9.5.5"
+        "nunomaduro/collision": "^5.5.0",
+        "phpunit/phpunit": "^9.5.7"
     },
     "autoload": {
         "psr-4": {
