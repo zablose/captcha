@@ -1,6 +1,6 @@
 # Captcha
 
-[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=dev)](https://travis-ci.org/zablose/captcha)
+[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=master)](https://travis-ci.org/zablose/captcha)
 
 Simple captcha with optional goodies for Laravel.
 
@@ -68,8 +68,11 @@ echo $captcha->toPng();
 ```
 
 To check captcha use:
+
 ```php
 <?php
+
+    use Zablose\Captcha\Captcha;
 
     // ...
 
