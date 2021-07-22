@@ -42,7 +42,7 @@ final class Config
 
     public function __construct(array $config)
     {
-        $this->assets_dir = self::selectAssetsDir();
+        $this->assets_dir = Directory::selectAssetsDir();
         $this->colors = Color::allButWhite();
 
         foreach ($config as $property_name => $value) {
@@ -247,24 +247,5 @@ final class Config
         $this->angle = $angle;
 
         return $this;
-    }
-
-    public static function selectAssetsDir(): string
-    {
-        $one_dir_up = '..'.DIRECTORY_SEPARATOR;
-        $base_dir = __DIR__.DIRECTORY_SEPARATOR.$one_dir_up.$one_dir_up.$one_dir_up;
-
-        $vendor_assets_dir = $base_dir.self::ASSETS_PATH;
-        $published_assets_dir = $base_dir.'resources'.DIRECTORY_SEPARATOR.self::ASSETS_PATH;
-
-        if (is_dir($vendor_assets_dir)) {
-            return $vendor_assets_dir;
-        }
-
-        if (is_dir($published_assets_dir)) {
-            return $published_assets_dir;
-        }
-
-        return __DIR__.DIRECTORY_SEPARATOR.$one_dir_up.'assets';
     }
 }
