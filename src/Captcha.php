@@ -17,7 +17,7 @@ final class Captcha
 
     public function isSensitive(): bool
     {
-        return $this->image->config->sensitive;
+        return $this->image->config->isSensitive();
     }
 
     public function getCode(): string

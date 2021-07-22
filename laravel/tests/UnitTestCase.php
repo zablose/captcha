@@ -17,7 +17,7 @@ abstract class UnitTestCase extends TestCase
         $config = new Config($config);
 
         $this->assertTrue(
-            IMAGETYPE_PNG === $type && $config->width === $width && $config->height === $height,
+            IMAGETYPE_PNG === $type && $config->getWidth() === $width && $config->getHeight() === $height,
             $message
         );
     }

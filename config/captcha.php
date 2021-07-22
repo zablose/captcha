@@ -8,7 +8,7 @@ use Zablose\Captcha\Config;
 return [
 
     'default' => [
-        'assets_dir' => Config::getAssetsDir(),
+        'assets_dir' => Config::selectAssetsDir(),
         'characters' => Config::CHARACTERS,
         'length' => 5,
         'width' => 160,
