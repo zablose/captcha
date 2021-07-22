@@ -9,6 +9,10 @@ final class Config
     public const ASSETS_PATH = 'vendor'.DIRECTORY_SEPARATOR.'zablose'.DIRECTORY_SEPARATOR.'captcha'.DIRECTORY_SEPARATOR.'assets';
     public const CHARACTERS = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
 
+    public const CONTRAST_LEVEL_MAX = -100;
+    public const CONTRAST_LEVEL_NO_CHANGE = 0;
+    public const CONTRAST_LEVEL_MIN = 100;
+
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
     private int $length = 5;
@@ -32,8 +36,7 @@ final class Config
 
     private bool $invert = false;
 
-    /** Contrast level (-100 = max contrast, 0 = no change, +100 = min contrast) */
-    private int $contrast = 0;
+    private int $contrast = self::CONTRAST_LEVEL_NO_CHANGE;
 
     private int $angle = 45;
 

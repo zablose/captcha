@@ -22,7 +22,7 @@ return [
         'sharpen' => 0,
         'blur' => 0,
         'invert' => false,
-        'contrast' => 0,
+        'contrast' => Config::CONTRAST_LEVEL_NO_CHANGE,
         'angle' => 45,
     ],
 
@@ -45,7 +45,7 @@ return [
     ],
 
     'contrast' => [
-        'contrast' => 50,
+        'contrast' => Config::CONTRAST_LEVEL_MAX,
     ],
 
     'no-angle' => [
