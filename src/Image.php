@@ -15,17 +15,15 @@ final class Image
     public function __construct(array $config)
     {
         $this->config = new Config($config);
+    }
 
+    private function setCanvas(): self
+    {
         $this->config->isUseBackgroundImage()
             ? $this->setCanvasFromPng()->resize()
             : $this->setCanvasFromColor();
 
-        $this->addRandomText()->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur();
-    }
-
-    public function getText(): string
-    {
-        return $this->text;
+        return $this;
     }
 
     private function setCanvasFromPng(): self
@@ -181,6 +179,18 @@ final class Image
         for ($i = 0; $i < $this->config->getBlur(); $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
+
+        return $this;
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    public function make(): self
+    {
+        $this->setCanvas()->addRandomText()->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur();
 
         return $this;
     }

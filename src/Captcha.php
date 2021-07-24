@@ -10,7 +10,7 @@ final class Captcha
 
     public function __construct(array $config = [])
     {
-        $this->image = new Image($config);
+        $this->image = (new Image($config))->make();
     }
 
     public function isSensitive(): bool
@@ -23,6 +23,11 @@ final class Captcha
         return $this->image->getText();
     }
 
+    public function toPng(): string
+    {
+        return $this->image->toPng();
+    }
+
     public function hash(): string
     {
         return Password::hash($this->getCode(), $this->isSensitive());
@@ -31,10 +36,5 @@ final class Captcha
     public static function verify(string $captcha, string $hash, bool $sensitive = false): bool
     {
         return Password::verify($captcha, $hash, $sensitive);
-    }
-
-    public function toPng(): string
-    {
-        return $this->image->toPng();
     }
 }
