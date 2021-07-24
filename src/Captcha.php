@@ -7,12 +7,10 @@ namespace Zablose\Captcha;
 final class Captcha
 {
     private Image $image;
-    private string $code;
 
     public function __construct(array $config = [])
     {
         $this->image = new Image($config);
-        $this->code = $this->image->addRandomText();
     }
 
     public function isSensitive(): bool
@@ -22,7 +20,7 @@ final class Captcha
 
     public function getCode(): string
     {
-        return $this->code;
+        return $this->image->getText();
     }
 
     public function hash(): string
@@ -37,6 +35,6 @@ final class Captcha
 
     public function toPng(): string
     {
-        return $this->image->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur()->toPng();
+        return $this->image->toPng();
     }
 }

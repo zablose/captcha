@@ -9,8 +9,8 @@ use GdImage;
 final class Image
 {
     public Config $config;
-
     private GdImage $canvas;
+    private string $text;
 
     public function __construct(array $config)
     {
@@ -19,6 +19,13 @@ final class Image
         $this->config->isUseBackgroundImage()
             ? $this->setCanvasFromPng()->resize()
             : $this->setCanvasFromColor();
+
+        $this->addRandomText()->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur();
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
     }
 
     private function setCanvasFromPng(): self
@@ -89,9 +96,9 @@ final class Image
         imagettftext($this->canvas, $size, $angle, $x, $y, $this->getColor($color), $font, $text);
     }
 
-    public function addRandomText(): string
+    private function addRandomText(): self
     {
-        $text = '';
+        $this->text = '';
         $width = intval($this->config->getWidth() / $this->config->getLength());
         $fonts = Directory::files($this->config->getAssetsDir().DIRECTORY_SEPARATOR.'fonts', '.ttf');
 
@@ -107,13 +114,13 @@ final class Image
                 Random::angle($this->config->getAngle())
             );
 
-            $text .= $char;
+            $this->text .= $char;
         }
 
-        return $text;
+        return $this;
     }
 
-    public function addRandomLines(): self
+    private function addRandomLines(): self
     {
         for ($i = 0; $i < $this->config->getLines(); $i++) {
             imageline(
@@ -131,7 +138,7 @@ final class Image
         return $this;
     }
 
-    public function addContrast(): self
+    private function addContrast(): self
     {
         if ($this->config->getContrast() <> 0) {
             imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->getContrast());
@@ -140,7 +147,7 @@ final class Image
         return $this;
     }
 
-    public function addSharpness(): self
+    private function addSharpness(): self
     {
         if ($this->config->getSharpen()) {
             $min = $this->config->getSharpen() >= 10 ? $this->config->getSharpen() * -0.01 : 0;
@@ -160,7 +167,7 @@ final class Image
         return $this;
     }
 
-    public function addInversion(): self
+    private function addInversion(): self
     {
         if ($this->config->isInvert()) {
             imagefilter($this->canvas, IMG_FILTER_NEGATE);
@@ -169,7 +176,7 @@ final class Image
         return $this;
     }
 
-    public function addBlur(): self
+    private function addBlur(): self
     {
         for ($i = 0; $i < $this->config->getBlur(); $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
