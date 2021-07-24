@@ -52,8 +52,10 @@ A code may look like:
 require __DIR__ . '/../vendor/autoload.php';
 
 use Zablose\Captcha\Captcha;
+use Zablose\Captcha\Config;
+use Zablose\Captcha\Image;
 
-$captcha = new Captcha(['invert' => true, 'width' => 220]);
+$captcha = new Captcha(new Image((new Config())->load(['invert' => true, 'width' => 220])));
 
 $data = [
     'captcha' => [

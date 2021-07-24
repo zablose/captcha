@@ -8,9 +8,9 @@ final class Captcha
 {
     private Image $image;
 
-    public function __construct(array $config = [])
+    public function __construct(Image $image)
     {
-        $this->image = (new Image($config))->make();
+        $this->image = $image->make();
     }
 
     public function isSensitive(): bool

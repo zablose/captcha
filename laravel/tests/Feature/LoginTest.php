@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Session;
 use Tests\FeatureTestCase;
-use Zablose\Captcha\Captcha;
 
 class LoginTest extends FeatureTestCase
 {
@@ -15,7 +14,7 @@ class LoginTest extends FeatureTestCase
     {
         $user = $this->createUser();
 
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
         Session::put(
             'captcha',
@@ -85,7 +84,7 @@ class LoginTest extends FeatureTestCase
     {
         $user = $this->createUser();
 
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
         Session::put(
             'captcha',

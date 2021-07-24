@@ -33,28 +33,30 @@ final class Config
 
     /** Between 0 and 100 */
     private int $blur = 0;
-
     private bool $invert = false;
-
     private int $contrast = self::CONTRAST_LEVEL_NO_CHANGE;
-
     private int $angle = 45;
 
-    public function __construct(array $config)
+    public function __construct()
     {
         $this->assets_dir = Assets::dir();
         $this->colors = Color::allButWhite();
-
-        foreach ($config as $property_name => $value) {
-            if (property_exists($this, $property_name)) {
-                $this->{$this->makeSetterName($property_name)}($value);
-            }
-        }
     }
 
     private function makeSetterName(string $property_name): string
     {
         return 'set'.implode('', array_map('ucfirst', explode('_', $property_name)));
+    }
+
+    public function load(array $config): Config
+    {
+        foreach ($config as $property_name => $value) {
+            if (property_exists($this, $property_name)) {
+                $this->{$this->makeSetterName($property_name)}($value);
+            }
+        }
+
+        return $this;
     }
 
     public function getAssetsDir(): string

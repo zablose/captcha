@@ -5,12 +5,15 @@ namespace Tests;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase;
+use Tests\Traits\makeCaptcha;
 
 abstract class FeatureTestCase extends TestCase
 {
     use CreatesApplication;
     use DatabaseMigrations;
+    use makeCaptcha;
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     protected function createUser(array $attributes = []): User
     {
         return User::factory()->create($attributes);
