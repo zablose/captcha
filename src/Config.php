@@ -42,7 +42,7 @@ final class Config
 
     public function __construct(array $config)
     {
-        $this->assets_dir = Directory::selectAssetsDir();
+        $this->assets_dir = Assets::dir();
         $this->colors = Color::allButWhite();
 
         foreach ($config as $property_name => $value) {

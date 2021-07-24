@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 use Zablose\Captcha\Color;
 use Zablose\Captcha\Config;
-use Zablose\Captcha\Directory;
+use Zablose\Captcha\Assets;
 
 return [
 
     'default' => [
-        'assets_dir' => Directory::selectAssetsDir(),
+        'assets_dir' => Assets::dir(),
         'characters' => Config::CHARACTERS,
         'length' => 5,
         'width' => 160,
