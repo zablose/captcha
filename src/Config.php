@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
+use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
+
 final class Config
 {
     public const ASSETS_PATH = 'vendor'.DIRECTORY_SEPARATOR.'zablose'.DIRECTORY_SEPARATOR.'captcha'.DIRECTORY_SEPARATOR.'assets';
@@ -234,6 +236,10 @@ final class Config
 
     public function setContrast(int $contrast): Config
     {
+        if ($contrast > self::CONTRAST_LEVEL_MIN || $contrast < self::CONTRAST_LEVEL_MAX) {
+            throw new ContrastIsOutOfRangeException();
+        }
+
         $this->contrast = $contrast;
 
         return $this;
