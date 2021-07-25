@@ -61,7 +61,7 @@ class CaptchaTest extends UnitTestCase
                 'contrast' => 50,
                 'sharpen' => 10,
                 'invert' => true,
-                'blur' => 25,
+                'blur' => 3,
             ]
         );
     }

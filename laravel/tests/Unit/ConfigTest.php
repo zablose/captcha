@@ -8,6 +8,7 @@ use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
+use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
 {
@@ -41,5 +42,21 @@ class ConfigTest extends UnitTestCase
         $this->expectException(BlurIsOutOfRangeException::class);
 
         (new Config())->load(['blur' => Config::BLUR_MAX + 1]);
+    }
+
+    /** @test */
+    public function sharpen_is_out_of_min_range()
+    {
+        $this->expectException(SharpenIsOutOfRangeException::class);
+
+        (new Config())->load(['sharpen' => Config::SHARPEN_NO_CHANGE - 1]);
+    }
+
+    /** @test */
+    public function sharpen_is_out_of_max_range()
+    {
+        $this->expectException(SharpenIsOutOfRangeException::class);
+
+        (new Config())->load(['sharpen' => Config::SHARPEN_MAX + 1]);
     }
 }

@@ -6,6 +6,7 @@ namespace Zablose\Captcha;
 
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
+use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
 final class Config
 {
@@ -18,6 +19,9 @@ final class Config
 
     public const BLUR_NO_CHANGE = 0;
     public const BLUR_MAX = 5;
+
+    public const SHARPEN_NO_CHANGE = 0;
+    public const SHARPEN_MAX = 100;
 
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
@@ -33,10 +37,8 @@ final class Config
     private string $background_color = Color::WHITE;
     private array $colors;
     private bool $sensitive = false;
-
-    /** Between 0 and 100 */
-    private int $sharpen = 0;
-    private int $blur = 0;
+    private int $sharpen = self::SHARPEN_NO_CHANGE;
+    private int $blur = self::BLUR_NO_CHANGE;
     private bool $invert = false;
     private int $contrast = self::CONTRAST_NO_CHANGE;
     private int $angle = 45;
@@ -202,6 +204,10 @@ final class Config
 
     public function setSharpen(int $sharpen): Config
     {
+        if ($sharpen < self::SHARPEN_NO_CHANGE || $sharpen > self::SHARPEN_MAX) {
+            throw new SharpenIsOutOfRangeException();
+        }
+
         $this->sharpen = $sharpen;
 
         return $this;
