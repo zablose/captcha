@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
+use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 
 final class Config
@@ -11,9 +12,12 @@ final class Config
     public const ASSETS_PATH = 'vendor'.DIRECTORY_SEPARATOR.'zablose'.DIRECTORY_SEPARATOR.'captcha'.DIRECTORY_SEPARATOR.'assets';
     public const CHARACTERS = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}';
 
-    public const CONTRAST_LEVEL_MAX = -100;
-    public const CONTRAST_LEVEL_NO_CHANGE = 0;
-    public const CONTRAST_LEVEL_MIN = 100;
+    public const CONTRAST_MAX = -100;
+    public const CONTRAST_NO_CHANGE = 0;
+    public const CONTRAST_MIN = 100;
+
+    public const BLUR_NO_CHANGE = 0;
+    public const BLUR_MAX = 5;
 
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
@@ -32,11 +36,9 @@ final class Config
 
     /** Between 0 and 100 */
     private int $sharpen = 0;
-
-    /** Between 0 and 100 */
     private int $blur = 0;
     private bool $invert = false;
-    private int $contrast = self::CONTRAST_LEVEL_NO_CHANGE;
+    private int $contrast = self::CONTRAST_NO_CHANGE;
     private int $angle = 45;
 
     public function __construct()
@@ -212,6 +214,10 @@ final class Config
 
     public function setBlur(int $blur): Config
     {
+        if ($blur < self::BLUR_NO_CHANGE || $blur > self::BLUR_MAX) {
+            throw new BlurIsOutOfRangeException();
+        }
+
         $this->blur = $blur;
 
         return $this;
@@ -236,7 +242,7 @@ final class Config
 
     public function setContrast(int $contrast): Config
     {
-        if ($contrast > self::CONTRAST_LEVEL_MIN || $contrast < self::CONTRAST_LEVEL_MAX) {
+        if ($contrast > self::CONTRAST_MIN || $contrast < self::CONTRAST_MAX) {
             throw new ContrastIsOutOfRangeException();
         }
 

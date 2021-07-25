@@ -9,6 +9,6 @@ use Zablose\Captcha\Config;
 
 class ContrastIsOutOfRangeException extends Exception
 {
-    protected $message = 'Contrast level is out of range! '
-    .'(Max '.Config::CONTRAST_LEVEL_MAX.' and min '.Config::CONTRAST_LEVEL_MIN.').';
+    protected $message = 'Contrast is out of range! '
+    .'(Max '.Config::CONTRAST_MAX.' and min '.Config::CONTRAST_MIN.').';
 }

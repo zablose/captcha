@@ -6,6 +6,7 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
+use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
@@ -15,7 +16,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(ContrastIsOutOfRangeException::class);
 
-        $this->makeCaptcha(['contrast' => Config::CONTRAST_LEVEL_MAX - 1]);
+        (new Config())->load(['contrast' => Config::CONTRAST_MAX - 1]);
     }
 
     /** @test */
@@ -23,6 +24,22 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(ContrastIsOutOfRangeException::class);
 
-        $this->makeCaptcha(['contrast' => Config::CONTRAST_LEVEL_MIN + 1]);
+        (new Config())->load(['contrast' => Config::CONTRAST_MIN + 1]);
+    }
+
+    /** @test */
+    public function blur_is_out_of_min_range()
+    {
+        $this->expectException(BlurIsOutOfRangeException::class);
+
+        (new Config())->load(['blur' => Config::BLUR_NO_CHANGE - 1]);
+    }
+
+    /** @test */
+    public function blur_is_out_of_max_range()
+    {
+        $this->expectException(BlurIsOutOfRangeException::class);
+
+        (new Config())->load(['blur' => Config::BLUR_MAX + 1]);
     }
 }

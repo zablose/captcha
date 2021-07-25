@@ -21,9 +21,9 @@ return [
         'colors' => Color::allButWhite(),
         'sensitive' => false,
         'sharpen' => 0,
-        'blur' => 0,
+        'blur' => Config::BLUR_MAX,
         'invert' => false,
-        'contrast' => Config::CONTRAST_LEVEL_NO_CHANGE,
+        'contrast' => Config::CONTRAST_NO_CHANGE,
         'angle' => 45,
     ],
 
@@ -46,7 +46,7 @@ return [
     ],
 
     'contrast' => [
-        'contrast' => Config::CONTRAST_LEVEL_MAX,
+        'contrast' => Config::CONTRAST_MAX,
     ],
 
     'no-angle' => [
