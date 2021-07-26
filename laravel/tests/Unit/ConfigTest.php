@@ -7,6 +7,7 @@ namespace Tests\Unit;
 use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
+use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
@@ -58,5 +59,21 @@ class ConfigTest extends UnitTestCase
         $this->expectException(SharpenIsOutOfRangeException::class);
 
         (new Config())->load(['sharpen' => Config::SHARPEN_MAX + 1]);
+    }
+
+    /** @test */
+    public function compression_is_out_of_min_range()
+    {
+        $this->expectException(CompressionIsOutOfRangeException::class);
+
+        (new Config())->load(['compression' => Config::COMPRESSION_NONE - 1]);
+    }
+
+    /** @test */
+    public function compression_is_out_of_max_range()
+    {
+        $this->expectException(CompressionIsOutOfRangeException::class);
+
+        (new Config())->load(['compression' => Config::COMPRESSION_MAX + 1]);
     }
 }

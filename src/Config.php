@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zablose\Captcha;
 
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
+use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
@@ -23,15 +24,15 @@ final class Config
     public const SHARPEN_NO_CHANGE = 0;
     public const SHARPEN_MAX = 100;
 
+    public const COMPRESSION_NONE = 0;
+    public const COMPRESSION_MAX = 9;
+
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
     private int $length = 5;
     private int $width = 160;
     private int $height = 60;
-
-    /** Compression level: from 0 (no compression) to 9. */
-    private int $compression = 9;
-
+    private int $compression = self::COMPRESSION_MAX;
     private int $lines = 10;
     private bool $use_background_image = true;
     private string $background_color = Color::WHITE;
@@ -132,6 +133,10 @@ final class Config
 
     public function setCompression(int $compression): Config
     {
+        if ($compression < self::COMPRESSION_NONE || $compression > self::COMPRESSION_MAX) {
+            throw new CompressionIsOutOfRangeException();
+        }
+
         $this->compression = $compression;
 
         return $this;
