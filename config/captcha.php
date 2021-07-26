@@ -31,6 +31,7 @@ return [
         'length' => 3,
         'width' => 90,
         'height' => 40,
+        'lines' => Config::LINES_NONE,
     ],
 
     'invert' => [

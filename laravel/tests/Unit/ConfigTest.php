@@ -10,6 +10,7 @@ use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
+use Zablose\Captcha\Exception\LinesIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
@@ -92,5 +93,13 @@ class ConfigTest extends UnitTestCase
         $this->expectException(AngleIsOutOfRangeException::class);
 
         (new Config())->load(['angle' => Config::ANGLE_MAX + 1]);
+    }
+
+    /** @test */
+    public function lines_is_out_of_min_range()
+    {
+        $this->expectException(LinesIsOutOfRangeException::class);
+
+        (new Config())->load(['lines' => Config::LINES_NONE - 1]);
     }
 }

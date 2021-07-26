@@ -8,6 +8,7 @@ use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
+use Zablose\Captcha\Exception\LinesIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
 
 final class Config
@@ -30,6 +31,8 @@ final class Config
 
     public const ANGLE_NO_ROTATION = 0;
     public const ANGLE_MAX = 60;
+
+    public const LINES_NONE = 0;
 
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
@@ -153,6 +156,10 @@ final class Config
 
     public function setLines(int $lines): Config
     {
+        if ($lines < self::LINES_NONE) {
+            throw new LinesIsOutOfRangeException();
+        }
+
         $this->lines = $lines;
 
         return $this;
