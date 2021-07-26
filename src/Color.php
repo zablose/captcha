@@ -17,18 +17,29 @@ class Color
     public const WHITE = '#FFFFFF';
     public const YELLOW = '#9F9000';
 
-    public static function allButWhite(): array
+    public static function all(): array
     {
         return [
-            Color::BLACK,
-            Color::BROWN,
-            Color::DARK_BLUE,
-            Color::GREEN,
-            Color::LIGHT_BLUE,
-            Color::ORANGE,
-            Color::PINK,
-            Color::RED,
-            Color::YELLOW,
+            self::BLACK,
+            self::BROWN,
+            self::DARK_BLUE,
+            self::GREEN,
+            self::LIGHT_BLUE,
+            self::ORANGE,
+            self::PINK,
+            self::RED,
+            self::WHITE,
+            self::YELLOW,
         ];
+    }
+
+    public static function allBut(string $color): array
+    {
+        return array_diff(self::all(), [$color]);
+    }
+
+    public static function allButWhite(): array
+    {
+        return self::allBut(self::WHITE);
     }
 }

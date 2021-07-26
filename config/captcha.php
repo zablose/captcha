@@ -14,7 +14,7 @@ return [
         'length' => 5,
         'width' => 160,
         'height' => 60,
-        'compression' => 9,
+        'compression' => Config::COMPRESSION_MAX,
         'lines' => 10,
         'use_background_image' => true,
         'background_color' => Color::WHITE,
@@ -55,6 +55,8 @@ return [
 
     'bg-color' => [
         'use_background_image' => false,
+        'background_color' => Color::YELLOW,
+        'colors' => Color::allBut(Color::YELLOW),
     ],
 
 ];
