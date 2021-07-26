@@ -62,7 +62,7 @@ class RoutesTest extends FeatureTestCase
             'default',
             'small',
             'invert',
-            'sharpen',
+            'sharpness',
             'blur',
             'contrast',
             'no-angle',

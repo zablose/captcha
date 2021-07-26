@@ -9,7 +9,7 @@ use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 use Zablose\Captcha\Exception\LinesIsOutOfRangeException;
-use Zablose\Captcha\Exception\SharpenIsOutOfRangeException;
+use Zablose\Captcha\Exception\SharpnessIsOutOfRangeException;
 
 final class Config
 {
@@ -23,8 +23,8 @@ final class Config
     public const BLUR_NO_CHANGE = 0;
     public const BLUR_MAX = 5;
 
-    public const SHARPEN_NO_CHANGE = 0;
-    public const SHARPEN_MAX = 100;
+    public const SHARPNESS_NO_CHANGE = 0;
+    public const SHARPNESS_MAX = 100;
 
     public const COMPRESSION_NONE = 0;
     public const COMPRESSION_MAX = 9;
@@ -45,7 +45,7 @@ final class Config
     private string $background_color = Color::WHITE;
     private array $colors;
     private bool $sensitive = false;
-    private int $sharpen = self::SHARPEN_NO_CHANGE;
+    private int $sharpness = self::SHARPNESS_NO_CHANGE;
     private int $blur = self::BLUR_NO_CHANGE;
     private bool $invert = false;
     private int $contrast = self::CONTRAST_NO_CHANGE;
@@ -213,18 +213,18 @@ final class Config
         return $this;
     }
 
-    public function getSharpen(): int
+    public function getSharpness(): int
     {
-        return $this->sharpen;
+        return $this->sharpness;
     }
 
-    public function setSharpen(int $sharpen): self
+    public function setSharpness(int $sharpness): self
     {
-        if ($sharpen < self::SHARPEN_NO_CHANGE || $sharpen > self::SHARPEN_MAX) {
-            throw new SharpenIsOutOfRangeException();
+        if ($sharpness < self::SHARPNESS_NO_CHANGE || $sharpness > self::SHARPNESS_MAX) {
+            throw new SharpnessIsOutOfRangeException();
         }
 
-        $this->sharpen = $sharpen;
+        $this->sharpness = $sharpness;
 
         return $this;
     }

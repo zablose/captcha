@@ -20,7 +20,7 @@ return [
         'background_color' => Color::WHITE,
         'colors' => Color::allButWhite(),
         'sensitive' => false,
-        'sharpen' => Config::SHARPEN_NO_CHANGE,
+        'sharpness' => Config::SHARPNESS_NO_CHANGE,
         'blur' => Config::BLUR_NO_CHANGE,
         'invert' => false,
         'contrast' => Config::CONTRAST_NO_CHANGE,
@@ -38,8 +38,8 @@ return [
         'invert' => true,
     ],
 
-    'sharpen' => [
-        'sharpen' => Config::SHARPEN_MAX,
+    'sharpness' => [
+        'sharpness' => Config::SHARPNESS_MAX,
     ],
 
     'blur' => [

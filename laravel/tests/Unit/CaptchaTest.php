@@ -59,7 +59,7 @@ class CaptchaTest extends UnitTestCase
         $this->assertCaptcha(
             [
                 'contrast' => 50,
-                'sharpen' => 10,
+                'sharpness' => 10,
                 'invert' => true,
                 'blur' => 3,
             ]

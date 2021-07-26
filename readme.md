@@ -21,7 +21,7 @@ Check new route is working, by visiting `/captcha` or `/captcha/{type}`.
 | ![](readme/images/captcha-default.png) | default | [/captcha/default](https://captcha.zdev:44302/captcha/default) |
 | ![](readme/images/captcha-small.png) | small | [/captcha/small](https://captcha.zdev:44302/captcha/small) |
 | ![](readme/images/captcha-invert.png) | invert | [/captcha/invert](https://captcha.zdev:44302/captcha/invert) |
-| ![](readme/images/captcha-sharpen.png) | sharpen | [/captcha/sharpen](https://captcha.zdev:44302/captcha/sharpen) |
+| ![](readme/images/captcha-sharpness.png) | sharpness | [/captcha/sharpness](https://captcha.zdev:44302/captcha/sharpness) |
 | ![](readme/images/captcha-blur.png) | blur | [/captcha/blur](https://captcha.zdev:44302/captcha/blur) |
 | ![](readme/images/captcha-contrast.png) | contrast | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast) |
 | ![](readme/images/captcha-no-angle.png) | no-angle | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle) |

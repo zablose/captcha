@@ -147,9 +147,9 @@ final class Image
 
     private function addSharpness(): self
     {
-        if ($this->config->getSharpen() > Config::SHARPEN_NO_CHANGE) {
-            $min = $this->config->getSharpen() >= 10 ? $this->config->getSharpen() * -0.01 : 0;
-            $max = $this->config->getSharpen() * -0.025;
+        if ($this->config->getSharpness() > Config::SHARPNESS_NO_CHANGE) {
+            $min = $this->config->getSharpness() >= 10 ? $this->config->getSharpness() * -0.01 : 0;
+            $max = $this->config->getSharpness() * -0.025;
             $abs = ((4 * $min + 4 * $max) * -1) + 1;
             $div = 1;
 
