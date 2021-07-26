@@ -16,7 +16,7 @@ abstract class UnitTestCase extends TestCase
     {
         [$width, $height, $type] = getimagesizefromstring($this->makeCaptcha($config)->toPng());
 
-        $config = (new Config())->load($config);
+        $config = (new Config())->update($config);
 
         $this->assertTrue(
             IMAGETYPE_PNG === $type && $config->getWidth() === $width && $config->getHeight() === $height,

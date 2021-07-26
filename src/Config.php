@@ -62,7 +62,7 @@ final class Config
         return 'set'.implode('', array_map('ucfirst', explode('_', $property_name)));
     }
 
-    public function load(array $config): Config
+    public function update(array $config): self
     {
         foreach ($config as $property_name => $value) {
             if (property_exists($this, $property_name)) {
@@ -78,7 +78,7 @@ final class Config
         return $this->assets_dir;
     }
 
-    public function setAssetsDir(string $assets_dir): Config
+    public function setAssetsDir(string $assets_dir): self
     {
         $this->assets_dir = $assets_dir;
 
@@ -90,7 +90,7 @@ final class Config
         return $this->characters;
     }
 
-    public function setCharacters(string $characters): Config
+    public function setCharacters(string $characters): self
     {
         $this->characters = $characters;
 
@@ -102,7 +102,7 @@ final class Config
         return $this->length;
     }
 
-    public function setLength(int $length): Config
+    public function setLength(int $length): self
     {
         $this->length = $length;
 
@@ -114,7 +114,7 @@ final class Config
         return $this->width;
     }
 
-    public function setWidth(int $width): Config
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -126,7 +126,7 @@ final class Config
         return $this->height;
     }
 
-    public function setHeight(int $height): Config
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -138,7 +138,7 @@ final class Config
         return $this->compression;
     }
 
-    public function setCompression(int $compression): Config
+    public function setCompression(int $compression): self
     {
         if ($compression < self::COMPRESSION_NONE || $compression > self::COMPRESSION_MAX) {
             throw new CompressionIsOutOfRangeException();
@@ -154,7 +154,7 @@ final class Config
         return $this->lines;
     }
 
-    public function setLines(int $lines): Config
+    public function setLines(int $lines): self
     {
         if ($lines < self::LINES_NONE) {
             throw new LinesIsOutOfRangeException();
@@ -170,7 +170,7 @@ final class Config
         return $this->use_background_image;
     }
 
-    public function setUseBackgroundImage(bool $use_background_image): Config
+    public function setUseBackgroundImage(bool $use_background_image): self
     {
         $this->use_background_image = $use_background_image;
 
@@ -182,7 +182,7 @@ final class Config
         return $this->background_color;
     }
 
-    public function setBackgroundColor(string $background_color): Config
+    public function setBackgroundColor(string $background_color): self
     {
         $this->background_color = $background_color;
 
@@ -194,7 +194,7 @@ final class Config
         return $this->colors;
     }
 
-    public function setColors(array $colors): Config
+    public function setColors(array $colors): self
     {
         $this->colors = $colors;
 
@@ -206,7 +206,7 @@ final class Config
         return $this->sensitive;
     }
 
-    public function setSensitive(bool $sensitive): Config
+    public function setSensitive(bool $sensitive): self
     {
         $this->sensitive = $sensitive;
 
@@ -218,7 +218,7 @@ final class Config
         return $this->sharpen;
     }
 
-    public function setSharpen(int $sharpen): Config
+    public function setSharpen(int $sharpen): self
     {
         if ($sharpen < self::SHARPEN_NO_CHANGE || $sharpen > self::SHARPEN_MAX) {
             throw new SharpenIsOutOfRangeException();
@@ -234,7 +234,7 @@ final class Config
         return $this->blur;
     }
 
-    public function setBlur(int $blur): Config
+    public function setBlur(int $blur): self
     {
         if ($blur < self::BLUR_NO_CHANGE || $blur > self::BLUR_MAX) {
             throw new BlurIsOutOfRangeException();
@@ -250,7 +250,7 @@ final class Config
         return $this->invert;
     }
 
-    public function setInvert(bool $invert): Config
+    public function setInvert(bool $invert): self
     {
         $this->invert = $invert;
 
@@ -262,7 +262,7 @@ final class Config
         return $this->contrast;
     }
 
-    public function setContrast(int $contrast): Config
+    public function setContrast(int $contrast): self
     {
         if ($contrast > self::CONTRAST_MIN || $contrast < self::CONTRAST_MAX) {
             throw new ContrastIsOutOfRangeException();
@@ -278,7 +278,7 @@ final class Config
         return $this->angle;
     }
 
-    public function setAngle(int $angle): Config
+    public function setAngle(int $angle): self
     {
         if ($angle < self::ANGLE_NO_ROTATION || $angle > self::ANGLE_MAX) {
             throw new AngleIsOutOfRangeException();

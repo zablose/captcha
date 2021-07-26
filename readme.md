@@ -46,6 +46,7 @@ In case you are not happy Laravel user, you may still use this package.
 Create captcha, add details to the session and output the image.
 
 A code may look like:
+
 ```php
 <?php
 
@@ -55,7 +56,7 @@ use Zablose\Captcha\Captcha;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Image;
 
-$captcha = new Captcha(new Image((new Config())->load(['invert' => true, 'width' => 220])));
+$captcha = new Captcha(new Image((new Config())->update(['invert' => true, 'width' => 220])));
 
 $data = [
     'captcha' => [

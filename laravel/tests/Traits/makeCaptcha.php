@@ -12,6 +12,6 @@ trait makeCaptcha
 {
     protected function makeCaptcha(array $config = []): Captcha
     {
-        return new Captcha(new Image((new Config())->load($config)));
+        return new Captcha(new Image((new Config())->update($config)));
     }
 }

@@ -13,7 +13,7 @@ Route::get(
     '/captcha/{type}/{random_string?}',
     function ($type = 'default')
     {
-        $captcha = new Captcha(new Image((new Config())->load(config('captcha.'.$type, []))));
+        $captcha = new Captcha(new Image((new Config())->update(config('captcha.'.$type, []))));
 
         Session::put(
             'captcha',

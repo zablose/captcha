@@ -20,7 +20,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(ContrastIsOutOfRangeException::class);
 
-        (new Config())->load(['contrast' => Config::CONTRAST_MAX - 1]);
+        (new Config())->update(['contrast' => Config::CONTRAST_MAX - 1]);
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(ContrastIsOutOfRangeException::class);
 
-        (new Config())->load(['contrast' => Config::CONTRAST_MIN + 1]);
+        (new Config())->update(['contrast' => Config::CONTRAST_MIN + 1]);
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(BlurIsOutOfRangeException::class);
 
-        (new Config())->load(['blur' => Config::BLUR_NO_CHANGE - 1]);
+        (new Config())->update(['blur' => Config::BLUR_NO_CHANGE - 1]);
     }
 
     /** @test */
@@ -44,7 +44,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(BlurIsOutOfRangeException::class);
 
-        (new Config())->load(['blur' => Config::BLUR_MAX + 1]);
+        (new Config())->update(['blur' => Config::BLUR_MAX + 1]);
     }
 
     /** @test */
@@ -52,7 +52,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(SharpenIsOutOfRangeException::class);
 
-        (new Config())->load(['sharpen' => Config::SHARPEN_NO_CHANGE - 1]);
+        (new Config())->update(['sharpen' => Config::SHARPEN_NO_CHANGE - 1]);
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(SharpenIsOutOfRangeException::class);
 
-        (new Config())->load(['sharpen' => Config::SHARPEN_MAX + 1]);
+        (new Config())->update(['sharpen' => Config::SHARPEN_MAX + 1]);
     }
 
     /** @test */
@@ -68,7 +68,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(CompressionIsOutOfRangeException::class);
 
-        (new Config())->load(['compression' => Config::COMPRESSION_NONE - 1]);
+        (new Config())->update(['compression' => Config::COMPRESSION_NONE - 1]);
     }
 
     /** @test */
@@ -76,7 +76,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(CompressionIsOutOfRangeException::class);
 
-        (new Config())->load(['compression' => Config::COMPRESSION_MAX + 1]);
+        (new Config())->update(['compression' => Config::COMPRESSION_MAX + 1]);
     }
 
     /** @test */
@@ -84,7 +84,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(AngleIsOutOfRangeException::class);
 
-        (new Config())->load(['angle' => Config::ANGLE_NO_ROTATION - 1]);
+        (new Config())->update(['angle' => Config::ANGLE_NO_ROTATION - 1]);
     }
 
     /** @test */
@@ -92,7 +92,7 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(AngleIsOutOfRangeException::class);
 
-        (new Config())->load(['angle' => Config::ANGLE_MAX + 1]);
+        (new Config())->update(['angle' => Config::ANGLE_MAX + 1]);
     }
 
     /** @test */
@@ -100,6 +100,6 @@ class ConfigTest extends UnitTestCase
     {
         $this->expectException(LinesIsOutOfRangeException::class);
 
-        (new Config())->load(['lines' => Config::LINES_NONE - 1]);
+        (new Config())->update(['lines' => Config::LINES_NONE - 1]);
     }
 }
