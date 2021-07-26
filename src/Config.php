@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
+use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
@@ -27,6 +28,9 @@ final class Config
     public const COMPRESSION_NONE = 0;
     public const COMPRESSION_MAX = 9;
 
+    public const ANGLE_NO_ROTATION = 0;
+    public const ANGLE_MAX = 60;
+
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
     private int $length = 5;
@@ -42,7 +46,7 @@ final class Config
     private int $blur = self::BLUR_NO_CHANGE;
     private bool $invert = false;
     private int $contrast = self::CONTRAST_NO_CHANGE;
-    private int $angle = 45;
+    private int $angle = self::ANGLE_MAX;
 
     public function __construct()
     {
@@ -269,6 +273,10 @@ final class Config
 
     public function setAngle(int $angle): Config
     {
+        if ($angle < self::ANGLE_NO_ROTATION || $angle > self::ANGLE_MAX) {
+            throw new AngleIsOutOfRangeException();
+        }
+
         $this->angle = $angle;
 
         return $this;

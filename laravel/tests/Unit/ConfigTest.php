@@ -6,6 +6,7 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
+use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
@@ -75,5 +76,21 @@ class ConfigTest extends UnitTestCase
         $this->expectException(CompressionIsOutOfRangeException::class);
 
         (new Config())->load(['compression' => Config::COMPRESSION_MAX + 1]);
+    }
+
+    /** @test */
+    public function angle_is_out_of_min_range()
+    {
+        $this->expectException(AngleIsOutOfRangeException::class);
+
+        (new Config())->load(['angle' => Config::ANGLE_NO_ROTATION - 1]);
+    }
+
+    /** @test */
+    public function angle_is_out_of_max_range()
+    {
+        $this->expectException(AngleIsOutOfRangeException::class);
+
+        (new Config())->load(['angle' => Config::ANGLE_MAX + 1]);
     }
 }
