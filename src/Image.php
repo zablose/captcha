@@ -109,7 +109,7 @@ final class Image
                 Random::value($fonts),
                 Random::size($this->config->getHeight()),
                 Random::value($this->config->getColors()),
-                Random::angle($this->config->getAngle())
+                Random::angle($this->config->getRotationAngle())
             );
 
             $this->text .= $char;

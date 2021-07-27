@@ -56,7 +56,11 @@ use Zablose\Captcha\Captcha;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Image;
 
-$captcha = new Captcha(new Image((new Config())->update(['invert' => true, 'width' => 220])));
+$captcha = new Captcha(
+    new Image(
+        (new Config())->update(['invert' => true, 'width' => 220])
+    )
+);
 
 $data = [
     'captcha' => [

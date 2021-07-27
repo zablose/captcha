@@ -24,7 +24,7 @@ return [
         'blur' => Config::BLUR_NO_CHANGE,
         'invert' => false,
         'contrast' => Config::CONTRAST_NO_CHANGE,
-        'angle' => Config::ANGLE_MAX,
+        'rotation_angle' => Config::ROTATION_ANGLE_MAX,
     ],
 
     'small' => [
@@ -51,7 +51,7 @@ return [
     ],
 
     'no-angle' => [
-        'angle' => Config::ANGLE_NO_ROTATION,
+        'rotation_angle' => Config::ROTATION_ANGLE_NO_CHANGE,
     ],
 
     'bg-color' => [

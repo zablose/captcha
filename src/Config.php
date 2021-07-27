@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
-use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
+use Zablose\Captcha\Exception\RotationAngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
@@ -29,8 +29,8 @@ final class Config
     public const COMPRESSION_NONE = 0;
     public const COMPRESSION_MAX = 9;
 
-    public const ANGLE_NO_ROTATION = 0;
-    public const ANGLE_MAX = 60;
+    public const ROTATION_ANGLE_NO_CHANGE = 0;
+    public const ROTATION_ANGLE_MAX = 60;
 
     public const LINES_NONE = 0;
 
@@ -49,7 +49,7 @@ final class Config
     private int $blur = self::BLUR_NO_CHANGE;
     private bool $invert = false;
     private int $contrast = self::CONTRAST_NO_CHANGE;
-    private int $angle = self::ANGLE_MAX;
+    private int $rotation_angle = self::ROTATION_ANGLE_MAX;
 
     public function __construct()
     {
@@ -273,18 +273,18 @@ final class Config
         return $this;
     }
 
-    public function getAngle(): int
+    public function getRotationAngle(): int
     {
-        return $this->angle;
+        return $this->rotation_angle;
     }
 
-    public function setAngle(int $angle): self
+    public function setRotationAngle(int $rotation_angle): self
     {
-        if ($angle < self::ANGLE_NO_ROTATION || $angle > self::ANGLE_MAX) {
-            throw new AngleIsOutOfRangeException();
+        if ($rotation_angle < self::ROTATION_ANGLE_NO_CHANGE || $rotation_angle > self::ROTATION_ANGLE_MAX) {
+            throw new RotationAngleIsOutOfRangeException();
         }
 
-        $this->angle = $angle;
+        $this->rotation_angle = $rotation_angle;
 
         return $this;
     }

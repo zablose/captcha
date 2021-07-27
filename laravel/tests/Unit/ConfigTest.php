@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
-use Zablose\Captcha\Exception\AngleIsOutOfRangeException;
+use Zablose\Captcha\Exception\RotationAngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
@@ -80,19 +80,19 @@ class ConfigTest extends UnitTestCase
     }
 
     /** @test */
-    public function angle_is_out_of_min_range()
+    public function rotation_angle_is_out_of_min_range()
     {
-        $this->expectException(AngleIsOutOfRangeException::class);
+        $this->expectException(RotationAngleIsOutOfRangeException::class);
 
-        (new Config())->update(['angle' => Config::ANGLE_NO_ROTATION - 1]);
+        (new Config())->update(['rotation_angle' => Config::ROTATION_ANGLE_NO_CHANGE - 1]);
     }
 
     /** @test */
-    public function angle_is_out_of_max_range()
+    public function rotation_angle_is_out_of_max_range()
     {
-        $this->expectException(AngleIsOutOfRangeException::class);
+        $this->expectException(RotationAngleIsOutOfRangeException::class);
 
-        (new Config())->update(['angle' => Config::ANGLE_MAX + 1]);
+        (new Config())->update(['rotation_angle' => Config::ROTATION_ANGLE_MAX + 1]);
     }
 
     /** @test */
