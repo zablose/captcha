@@ -15,91 +15,65 @@ use Zablose\Captcha\Exception\SharpnessIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
 {
-    /** @test */
-    public function contrast_is_out_of_max_range()
+    public function exceptions_triggered_by_wrong_configs(): array
     {
-        $this->expectException(ContrastIsOutOfRangeException::class);
-
-        (new Config())->update(['contrast' => Config::CONTRAST_MAX - 1]);
+        return [
+            [
+                ContrastIsOutOfRangeException::class,
+                ['contrast' => Config::CONTRAST_MAX - 1],
+            ],
+            [
+                ContrastIsOutOfRangeException::class,
+                ['contrast' => Config::CONTRAST_MIN + 1],
+            ],
+            [
+                BlurIsOutOfRangeException::class,
+                ['blur' => Config::BLUR_NO_CHANGE - 1],
+            ],
+            [
+                BlurIsOutOfRangeException::class,
+                ['blur' => Config::BLUR_MAX + 1],
+            ],
+            [
+                SharpnessIsOutOfRangeException::class,
+                ['sharpness' => Config::SHARPNESS_NO_CHANGE - 1],
+            ],
+            [
+                SharpnessIsOutOfRangeException::class,
+                ['sharpness' => Config::SHARPNESS_MAX + 1],
+            ],
+            [
+                CompressionIsOutOfRangeException::class,
+                ['compression' => Config::COMPRESSION_NONE - 1],
+            ],
+            [
+                CompressionIsOutOfRangeException::class,
+                ['compression' => Config::COMPRESSION_MAX + 1],
+            ],
+            [
+                RotationAngleIsOutOfRangeException::class,
+                ['rotation_angle' => Config::ROTATION_ANGLE_NO_CHANGE - 1],
+            ],
+            [
+                RotationAngleIsOutOfRangeException::class,
+                ['rotation_angle' => Config::ROTATION_ANGLE_MAX + 1],
+            ],
+            [
+                LinesIsOutOfRangeException::class,
+                ['lines' => Config::LINES_NONE - 1],
+            ],
+        ];
     }
 
-    /** @test */
-    public function contrast_is_out_of_min_range()
+    /**
+     * @test
+     *
+     * @dataProvider exceptions_triggered_by_wrong_configs()
+     */
+    public function validation_fails_if_config_is_wrong(string $exception, array $config)
     {
-        $this->expectException(ContrastIsOutOfRangeException::class);
+        $this->expectException($exception);
 
-        (new Config())->update(['contrast' => Config::CONTRAST_MIN + 1]);
-    }
-
-    /** @test */
-    public function blur_is_out_of_min_range()
-    {
-        $this->expectException(BlurIsOutOfRangeException::class);
-
-        (new Config())->update(['blur' => Config::BLUR_NO_CHANGE - 1]);
-    }
-
-    /** @test */
-    public function blur_is_out_of_max_range()
-    {
-        $this->expectException(BlurIsOutOfRangeException::class);
-
-        (new Config())->update(['blur' => Config::BLUR_MAX + 1]);
-    }
-
-    /** @test */
-    public function sharpness_is_out_of_min_range()
-    {
-        $this->expectException(SharpnessIsOutOfRangeException::class);
-
-        (new Config())->update(['sharpness' => Config::SHARPNESS_NO_CHANGE - 1]);
-    }
-
-    /** @test */
-    public function sharpness_is_out_of_max_range()
-    {
-        $this->expectException(SharpnessIsOutOfRangeException::class);
-
-        (new Config())->update(['sharpness' => Config::SHARPNESS_MAX + 1]);
-    }
-
-    /** @test */
-    public function compression_is_out_of_min_range()
-    {
-        $this->expectException(CompressionIsOutOfRangeException::class);
-
-        (new Config())->update(['compression' => Config::COMPRESSION_NONE - 1]);
-    }
-
-    /** @test */
-    public function compression_is_out_of_max_range()
-    {
-        $this->expectException(CompressionIsOutOfRangeException::class);
-
-        (new Config())->update(['compression' => Config::COMPRESSION_MAX + 1]);
-    }
-
-    /** @test */
-    public function rotation_angle_is_out_of_min_range()
-    {
-        $this->expectException(RotationAngleIsOutOfRangeException::class);
-
-        (new Config())->update(['rotation_angle' => Config::ROTATION_ANGLE_NO_CHANGE - 1]);
-    }
-
-    /** @test */
-    public function rotation_angle_is_out_of_max_range()
-    {
-        $this->expectException(RotationAngleIsOutOfRangeException::class);
-
-        (new Config())->update(['rotation_angle' => Config::ROTATION_ANGLE_MAX + 1]);
-    }
-
-    /** @test */
-    public function lines_is_out_of_min_range()
-    {
-        $this->expectException(LinesIsOutOfRangeException::class);
-
-        (new Config())->update(['lines' => Config::LINES_NONE - 1]);
+        (new Config())->update($config)->validate();
     }
 }

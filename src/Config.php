@@ -57,32 +57,9 @@ final class Config
         $this->colors = Color::allButWhite();
     }
 
-    private function makeSetterName(string $property_name): string
-    {
-        return 'set'.implode('', array_map('ucfirst', explode('_', $property_name)));
-    }
-
-    public function update(array $config): self
-    {
-        foreach ($config as $property_name => $value) {
-            if (property_exists($this, $property_name)) {
-                $this->{$this->makeSetterName($property_name)}($value);
-            }
-        }
-
-        return $this;
-    }
-
     public function getAssetsDir(): string
     {
         return $this->assets_dir;
-    }
-
-    public function setAssetsDir(string $assets_dir): self
-    {
-        $this->assets_dir = $assets_dir;
-
-        return $this;
     }
 
     public function getCharacters(): string
@@ -90,23 +67,9 @@ final class Config
         return $this->characters;
     }
 
-    public function setCharacters(string $characters): self
-    {
-        $this->characters = $characters;
-
-        return $this;
-    }
-
     public function getLength(): int
     {
         return $this->length;
-    }
-
-    public function setLength(int $length): self
-    {
-        $this->length = $length;
-
-        return $this;
     }
 
     public function getWidth(): int
@@ -114,23 +77,9 @@ final class Config
         return $this->width;
     }
 
-    public function setWidth(int $width): self
-    {
-        $this->width = $width;
-
-        return $this;
-    }
-
     public function getHeight(): int
     {
         return $this->height;
-    }
-
-    public function setHeight(int $height): self
-    {
-        $this->height = $height;
-
-        return $this;
     }
 
     public function getCompression(): int
@@ -138,31 +87,9 @@ final class Config
         return $this->compression;
     }
 
-    public function setCompression(int $compression): self
-    {
-        if ($compression < self::COMPRESSION_NONE || $compression > self::COMPRESSION_MAX) {
-            throw new CompressionIsOutOfRangeException();
-        }
-
-        $this->compression = $compression;
-
-        return $this;
-    }
-
     public function getLines(): int
     {
         return $this->lines;
-    }
-
-    public function setLines(int $lines): self
-    {
-        if ($lines < self::LINES_NONE) {
-            throw new LinesIsOutOfRangeException();
-        }
-
-        $this->lines = $lines;
-
-        return $this;
     }
 
     public function isUseBackgroundImage(): bool
@@ -170,23 +97,9 @@ final class Config
         return $this->use_background_image;
     }
 
-    public function setUseBackgroundImage(bool $use_background_image): self
-    {
-        $this->use_background_image = $use_background_image;
-
-        return $this;
-    }
-
     public function getBackgroundColor(): string
     {
         return $this->background_color;
-    }
-
-    public function setBackgroundColor(string $background_color): self
-    {
-        $this->background_color = $background_color;
-
-        return $this;
     }
 
     public function getColors(): array
@@ -194,23 +107,9 @@ final class Config
         return $this->colors;
     }
 
-    public function setColors(array $colors): self
-    {
-        $this->colors = $colors;
-
-        return $this;
-    }
-
     public function isSensitive(): bool
     {
         return $this->sensitive;
-    }
-
-    public function setSensitive(bool $sensitive): self
-    {
-        $this->sensitive = $sensitive;
-
-        return $this;
     }
 
     public function getSharpness(): int
@@ -218,31 +117,9 @@ final class Config
         return $this->sharpness;
     }
 
-    public function setSharpness(int $sharpness): self
-    {
-        if ($sharpness < self::SHARPNESS_NO_CHANGE || $sharpness > self::SHARPNESS_MAX) {
-            throw new SharpnessIsOutOfRangeException();
-        }
-
-        $this->sharpness = $sharpness;
-
-        return $this;
-    }
-
     public function getBlur(): int
     {
         return $this->blur;
-    }
-
-    public function setBlur(int $blur): self
-    {
-        if ($blur < self::BLUR_NO_CHANGE || $blur > self::BLUR_MAX) {
-            throw new BlurIsOutOfRangeException();
-        }
-
-        $this->blur = $blur;
-
-        return $this;
     }
 
     public function isInvert(): bool
@@ -250,27 +127,9 @@ final class Config
         return $this->invert;
     }
 
-    public function setInvert(bool $invert): self
-    {
-        $this->invert = $invert;
-
-        return $this;
-    }
-
     public function getContrast(): int
     {
         return $this->contrast;
-    }
-
-    public function setContrast(int $contrast): self
-    {
-        if ($contrast > self::CONTRAST_MIN || $contrast < self::CONTRAST_MAX) {
-            throw new ContrastIsOutOfRangeException();
-        }
-
-        $this->contrast = $contrast;
-
-        return $this;
     }
 
     public function getRotationAngle(): int
@@ -278,13 +137,48 @@ final class Config
         return $this->rotation_angle;
     }
 
-    public function setRotationAngle(int $rotation_angle): self
+    public function update(array $config): self
     {
-        if ($rotation_angle < self::ROTATION_ANGLE_NO_CHANGE || $rotation_angle > self::ROTATION_ANGLE_MAX) {
-            throw new RotationAngleIsOutOfRangeException();
+        foreach ($config as $property_name => $value) {
+            if (property_exists($this, $property_name)) {
+                $this->$property_name = $value;
+            }
         }
 
-        $this->rotation_angle = $rotation_angle;
+        return $this;
+    }
+
+    /**
+     * Do NOT use on production, meant to be used within app tests.
+     *
+     * There is no reason to validate config every time captcha is generated,
+     * unless, config is changed dynamically.
+     */
+    public function validate(): self
+    {
+        if ($this->compression < self::COMPRESSION_NONE || $this->compression > self::COMPRESSION_MAX) {
+            throw new CompressionIsOutOfRangeException();
+        }
+
+        if ($this->lines < self::LINES_NONE) {
+            throw new LinesIsOutOfRangeException();
+        }
+
+        if ($this->sharpness < self::SHARPNESS_NO_CHANGE || $this->sharpness > self::SHARPNESS_MAX) {
+            throw new SharpnessIsOutOfRangeException();
+        }
+
+        if ($this->blur < self::BLUR_NO_CHANGE || $this->blur > self::BLUR_MAX) {
+            throw new BlurIsOutOfRangeException();
+        }
+
+        if ($this->contrast > self::CONTRAST_MIN || $this->contrast < self::CONTRAST_MAX) {
+            throw new ContrastIsOutOfRangeException();
+        }
+
+        if ($this->rotation_angle < self::ROTATION_ANGLE_NO_CHANGE || $this->rotation_angle > self::ROTATION_ANGLE_MAX) {
+            throw new RotationAngleIsOutOfRangeException();
+        }
 
         return $this;
     }
