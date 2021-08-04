@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
+use Zablose\Captcha\Exception\HeightIsOutOfRangeException;
+use Zablose\Captcha\Exception\LengthIsOutOfRangeException;
+use Zablose\Captcha\Exception\RatioIsOutOfRangeException;
 use Zablose\Captcha\Exception\RotationAngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 use Zablose\Captcha\Exception\LinesIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpnessIsOutOfRangeException;
+use Zablose\Captcha\Exception\WidthIsOutOfRangeException;
 
 final class Config
 {
@@ -33,6 +37,10 @@ final class Config
     public const ROTATION_ANGLE_MAX = 60;
 
     public const LINES_NONE = 0;
+
+    public const LENGTH_MIN = 1;
+    public const WIDTH_MIN = 8;
+    public const HEIGHT_MIN = 16;
 
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
@@ -156,6 +164,22 @@ final class Config
      */
     public function validate(): self
     {
+        if ($this->length < self::LENGTH_MIN) {
+            throw new LengthIsOutOfRangeException();
+        }
+
+        if ($this->width < self::WIDTH_MIN) {
+            throw new WidthIsOutOfRangeException();
+        }
+
+        if ($this->height < self::HEIGHT_MIN) {
+            throw new HeightIsOutOfRangeException();
+        }
+
+        if ($this->currentRatio() > $this->maxRatio()) {
+            throw new RatioIsOutOfRangeException();
+        }
+
         if ($this->compression < self::COMPRESSION_NONE || $this->compression > self::COMPRESSION_MAX) {
             throw new CompressionIsOutOfRangeException();
         }
@@ -181,5 +205,15 @@ final class Config
         }
 
         return $this;
+    }
+
+    private function currentRatio(): float
+    {
+        return $this->height / ($this->width / $this->length);
+    }
+
+    private function maxRatio(): float
+    {
+        return self::HEIGHT_MIN / self::WIDTH_MIN;
     }
 }

@@ -6,12 +6,16 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use Zablose\Captcha\Config;
+use Zablose\Captcha\Exception\HeightIsOutOfRangeException;
+use Zablose\Captcha\Exception\LengthIsOutOfRangeException;
+use Zablose\Captcha\Exception\RatioIsOutOfRangeException;
 use Zablose\Captcha\Exception\RotationAngleIsOutOfRangeException;
 use Zablose\Captcha\Exception\BlurIsOutOfRangeException;
 use Zablose\Captcha\Exception\CompressionIsOutOfRangeException;
 use Zablose\Captcha\Exception\ContrastIsOutOfRangeException;
 use Zablose\Captcha\Exception\LinesIsOutOfRangeException;
 use Zablose\Captcha\Exception\SharpnessIsOutOfRangeException;
+use Zablose\Captcha\Exception\WidthIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
 {
@@ -61,6 +65,26 @@ class ConfigTest extends UnitTestCase
             [
                 LinesIsOutOfRangeException::class,
                 ['lines' => Config::LINES_NONE - 1],
+            ],
+            [
+                LengthIsOutOfRangeException::class,
+                ['length' => Config::LENGTH_MIN - 1],
+            ],
+            [
+                WidthIsOutOfRangeException::class,
+                ['width' => Config::WIDTH_MIN - 1],
+            ],
+            [
+                HeightIsOutOfRangeException::class,
+                ['height' => Config::HEIGHT_MIN - 1],
+            ],
+            [
+                RatioIsOutOfRangeException::class,
+                [
+                    'length' => 2,
+                    'width' => Config::WIDTH_MIN * 2 - 1,
+                    'height' => Config::HEIGHT_MIN,
+                ],
             ],
         ];
     }

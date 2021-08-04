@@ -10,5 +10,5 @@ use Zablose\Captcha\Config;
 class CompressionIsOutOfRangeException extends Exception
 {
     protected $message = 'Compression is out of range! '
-    .'None '.Config::COMPRESSION_NONE.' and max '.Config::COMPRESSION_MAX.').';
+    .'None "'.Config::COMPRESSION_NONE.'" and max "'.Config::COMPRESSION_MAX.'".';
 }

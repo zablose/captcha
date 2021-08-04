@@ -10,5 +10,5 @@ use Zablose\Captcha\Config;
 class SharpnessIsOutOfRangeException extends Exception
 {
     protected $message = 'Sharpness is out of range! '
-    .'Min (no change) '.Config::SHARPNESS_NO_CHANGE.' and max '.Config::SHARPNESS_MAX.').';
+    .'No change "'.Config::SHARPNESS_NO_CHANGE.'" and max "'.Config::SHARPNESS_MAX.'".';
 }

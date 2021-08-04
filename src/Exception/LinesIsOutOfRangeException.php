@@ -10,5 +10,5 @@ use Zablose\Captcha\Config;
 class LinesIsOutOfRangeException extends Exception
 {
     protected $message = 'Lines count is out of range! '
-    .'No lines '.Config::LINES_NONE.' and max "be rational").';
+    .'No lines "'.Config::LINES_NONE.'" and max "be rational".';
 }
