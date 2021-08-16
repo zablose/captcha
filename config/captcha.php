@@ -11,9 +11,9 @@ return [
     'default' => [
         'assets_dir' => Assets::dir(),
         'characters' => Config::CHARACTERS,
-        'length' => 5,
-        'width' => 160,
-        'height' => 60,
+        'length' => Config::LENGTH_DEFAULT,
+        'width' => Config::WIDTH_DEFAULT,
+        'height' => Config::HEIGHT_DEFAULT,
         'compression' => Config::COMPRESSION_MAX,
         'lines' => 10,
         'use_background_image' => true,

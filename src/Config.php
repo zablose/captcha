@@ -39,8 +39,11 @@ final class Config
     public const LINES_NONE = 0;
 
     public const LENGTH_MIN = 1;
+    public const LENGTH_DEFAULT = 5;
     public const WIDTH_MIN = 8;
+    public const WIDTH_DEFAULT = 160;
     public const HEIGHT_MIN = 16;
+    public const HEIGHT_DEFAULT = 60;
 
     private string $assets_dir;
     private string $characters = self::CHARACTERS;
