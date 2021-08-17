@@ -1,64 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
+use Zablose\Captcha\Color;
+use Zablose\Captcha\Config;
+use Zablose\Captcha\Assets;
+
 return [
 
     'default' => [
-        'assets_dir' => __DIR__.'/../vendor/zablose/captcha/assets/',
-        'characters' => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ@#~!?<>{}',
-        'length' => 5,
-        'width' => 160,
-        'height' => 60,
-        'compression' => 9,
+        'assets_dir' => Assets::dir(),
+        'characters' => Config::CHARACTERS,
+        'length' => Config::LENGTH_DEFAULT,
+        'width' => Config::WIDTH_DEFAULT,
+        'height' => Config::HEIGHT_DEFAULT,
+        'compression' => Config::COMPRESSION_MAX,
         'lines' => 10,
         'use_background_image' => true,
-        'background_color' => '#FFFFFF',
-        'colors' => [
-            '#000000', // Black
-            '#A60F0F', // Red
-            '#6E3200', // Brown
-            '#FF6804', // Orange
-            '#A50065', // Pink
-            '#342A99', // Dark blue
-            '#126565', // Light blue
-            '#0D5F09', // Green
-            '#9F9000', // Yellow
-        ],
+        'background_color' => Color::WHITE,
+        'colors' => Color::allButWhite(),
         'sensitive' => false,
-        'sharpen' => 0,
-        'blur' => 0,
+        'sharpness' => Config::SHARPNESS_NO_CHANGE,
+        'blur' => Config::BLUR_NO_CHANGE,
         'invert' => false,
-        'contrast' => 0,
-        'angle' => 45,
+        'contrast' => Config::CONTRAST_NO_CHANGE,
+        'rotation_angle' => Config::ROTATION_ANGLE_MAX,
     ],
 
     'small' => [
         'length' => 3,
         'width' => 90,
         'height' => 40,
+        'lines' => Config::LINES_NONE,
     ],
 
     'invert' => [
         'invert' => true,
     ],
 
-    'sharpen' => [
-        'sharpen' => 25,
+    'sharpness' => [
+        'sharpness' => Config::SHARPNESS_MAX,
     ],
 
     'blur' => [
-        'blur' => 5,
+        'blur' => Config::BLUR_MAX,
     ],
 
     'contrast' => [
-        'contrast' => 50,
+        'contrast' => Config::CONTRAST_MAX,
     ],
 
     'no-angle' => [
-        'angle' => 0,
+        'rotation_angle' => Config::ROTATION_ANGLE_NO_CHANGE,
     ],
 
     'bg-color' => [
         'use_background_image' => false,
+        'background_color' => Color::YELLOW,
+        'colors' => Color::allBut(Color::YELLOW),
     ],
 
 ];

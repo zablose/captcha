@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Contracts\Console\Kernel;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 define('LARAVEL_START', microtime(true));
 
@@ -13,7 +17,7 @@ define('LARAVEL_START', microtime(true));
 | Composer provides a convenient, automatically generated class loader
 | for our application. We just need to utilize it! We'll require it
 | into the script here so that we do not have to worry about the
-| loading of any our classes "manually". Feels great to relax.
+| loading of any of our classes manually. It's great to relax.
 |
 */
 
@@ -36,8 +40,8 @@ $app = require_once __DIR__.'/bootstrap/app.php';
 $kernel = $app->make(Kernel::class);
 
 $status = $kernel->handle(
-    $input = new Symfony\Component\Console\Input\ArgvInput,
-    new Symfony\Component\Console\Output\ConsoleOutput
+    $input = new ArgvInput(),
+    new ConsoleOutput()
 );
 
 /*

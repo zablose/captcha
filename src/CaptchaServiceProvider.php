@@ -8,33 +8,41 @@ use Illuminate\Support\Facades\Session;
 
 class CaptchaServiceProvider extends ServiceProvider
 {
+    private const BASE_DIR = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR;
+
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/captcha.php', 'captcha');
+        $this->mergeConfigFrom(self::BASE_DIR.'config'.DIRECTORY_SEPARATOR.'captcha.php', 'captcha');
 
-        require __DIR__.'/../helpers.php';
+        require self::BASE_DIR.'helpers.php';
     }
 
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../config/captcha.php' => config_path('captcha.php'),
-        ], 'config');
+        $this->publishes(
+            [self::BASE_DIR.'config'.DIRECTORY_SEPARATOR.'captcha.php' => config_path('captcha.php')],
+            'config'
+        );
 
-        $this->loadRoutesFrom(__DIR__.'/../routes/captcha.php');
+        $this->publishes(
+            [self::BASE_DIR.'assets' => resource_path(Config::ASSETS_PATH)],
+            'assets'
+        );
+
+        $this->loadRoutesFrom(self::BASE_DIR.'routes'.DIRECTORY_SEPARATOR.'captcha.php');
 
         /** @var Validator $validator */
         $validator = $this->app['validator'];
         $validator->extend(
             'captcha',
-            function ($attribute, $captcha, $parameters)
+            function ($attribute, $captcha)
             {
                 if (! Session::has('captcha')) {
                     return false;
                 }
 
                 $sensitive = Session::get('captcha.sensitive');
-                $hash      = Session::get('captcha.hash');
+                $hash = Session::get('captcha.hash');
 
                 Session::remove('captcha');
 

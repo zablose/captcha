@@ -21,7 +21,7 @@ Check new route is working, by visiting `/captcha` or `/captcha/{type}`.
 | ![](readme/images/captcha-default.png) | default | [/captcha/default](https://captcha.zdev:44302/captcha/default) |
 | ![](readme/images/captcha-small.png) | small | [/captcha/small](https://captcha.zdev:44302/captcha/small) |
 | ![](readme/images/captcha-invert.png) | invert | [/captcha/invert](https://captcha.zdev:44302/captcha/invert) |
-| ![](readme/images/captcha-sharpen.png) | sharpen | [/captcha/sharpen](https://captcha.zdev:44302/captcha/sharpen) |
+| ![](readme/images/captcha-sharpness.png) | sharpness | [/captcha/sharpness](https://captcha.zdev:44302/captcha/sharpness) |
 | ![](readme/images/captcha-blur.png) | blur | [/captcha/blur](https://captcha.zdev:44302/captcha/blur) |
 | ![](readme/images/captcha-contrast.png) | contrast | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast) |
 | ![](readme/images/captcha-no-angle.png) | no-angle | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle) |
@@ -46,14 +46,21 @@ In case you are not happy Laravel user, you may still use this package.
 Create captcha, add details to the session and output the image.
 
 A code may look like:
+
 ```php
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
 
 use Zablose\Captcha\Captcha;
+use Zablose\Captcha\Config;
+use Zablose\Captcha\Image;
 
-$captcha = new Captcha(['invert' => true, 'width' => 220]);
+$captcha = new Captcha(
+    new Image(
+        (new Config())->update(['invert' => true, 'width' => 220])
+    )
+);
 
 $data = [
     'captcha' => [

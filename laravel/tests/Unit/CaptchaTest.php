@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit;
 
@@ -16,7 +18,7 @@ class CaptchaTest extends UnitTestCase
     /** @test */
     public function checkable()
     {
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
         $this->assertTrue(Captcha::verify($captcha->getCode(), $captcha->hash(), $captcha->isSensitive()));
     }
@@ -24,7 +26,7 @@ class CaptchaTest extends UnitTestCase
     /** @test */
     public function check_fails_if_text_does_not_match()
     {
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
         $this->assertFalse(Captcha::verify($captcha->getCode().'abc', $captcha->hash(), $captcha->isSensitive()));
     }
@@ -32,7 +34,7 @@ class CaptchaTest extends UnitTestCase
     /** @test */
     public function check_fails_if_hash_does_not_match()
     {
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
         $this->assertFalse(Captcha::verify($captcha->getCode(), $captcha->hash().'abc', $captcha->isSensitive()));
     }
@@ -40,10 +42,7 @@ class CaptchaTest extends UnitTestCase
     /** @test */
     public function sensitive_check_fails_if_text_case_does_not_match()
     {
-        $captcha = new Captcha([
-            'characters' => 'abcdef',
-            'sensitive' => true,
-        ]);
+        $captcha = $this->makeCaptcha(['characters' => 'abcdef', 'sensitive' => true,]);
 
         $this->assertFalse(Captcha::verify(strtoupper($captcha->getCode()), $captcha->hash(), $captcha->isSensitive()));
     }
@@ -57,11 +56,13 @@ class CaptchaTest extends UnitTestCase
     /** @test */
     public function configurable()
     {
-        $this->assertCaptcha([
-            'contrast' => 50,
-            'sharpen' => 10,
-            'invert' => true,
-            'blur' => 25,
-        ]);
+        $this->assertCaptcha(
+            [
+                'contrast' => 50,
+                'sharpness' => 10,
+                'invert' => true,
+                'blur' => 3,
+            ]
+        );
     }
 }

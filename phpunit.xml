@@ -15,11 +15,10 @@
 >
     <coverage processUncoveredFiles="true">
         <include>
+            <directory suffix=".php">./config</directory>
+            <directory suffix=".php">./routes</directory>
             <directory suffix=".php">./src</directory>
         </include>
-        <exclude>
-            <file>./src/CaptchaServiceProvider.php</file>
-        </exclude>
         <report>
             <html outputDirectory="./coverage-report/"/>
             <text outputFile="php://stdout" showUncoveredFiles="true"/>

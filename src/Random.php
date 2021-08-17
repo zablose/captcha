@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Zablose\Captcha;
 
 final class Random
 {
-    const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
+    public const CHARACTERS = '0123456789abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ';
 
     public static function string(int $length = 12, string $characters = self::CHARACTERS): string
     {
@@ -19,7 +21,7 @@ final class Random
         return $string;
     }
 
-    public static function lower(int $length, string $characters = self::CHARACTERS)
+    public static function lower(int $length, string $characters = self::CHARACTERS): string
     {
         return strtolower(self::string($length, $characters));
     }
@@ -29,12 +31,7 @@ final class Random
         return $characters[array_rand(str_split($characters))];
     }
 
-    /**
-     * @param  array  $data
-     *
-     * @return mixed
-     */
-    public static function value(array $data)
+    public static function value(array $data): mixed
     {
         return $data[array_rand($data)];
     }

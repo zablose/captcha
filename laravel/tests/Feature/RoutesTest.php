@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
@@ -51,5 +53,28 @@ class RoutesTest extends FeatureTestCase
     public function logout()
     {
         $this->post('/logout')->assertRedirect('/');
+    }
+
+    /** @test */
+    public function captcha()
+    {
+        $types = [
+            'default',
+            'small',
+            'invert',
+            'sharpness',
+            'blur',
+            'contrast',
+            'no-angle',
+            'bg-color',
+        ];
+
+        foreach ($types as $type) {
+            $this->assertPng(
+                $this->get('/captcha/'.$type)->assertOk()->getContent(),
+                config("captcha.$type.width") ?? config('captcha.default.width'),
+                config("captcha.$type.height") ?? config('captcha.default.height')
+            );
+        }
     }
 }

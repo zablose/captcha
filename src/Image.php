@@ -1,36 +1,44 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Zablose\Captcha;
+
+use GdImage;
 
 final class Image
 {
     public Config $config;
+    private GdImage $canvas;
+    private string $text;
 
-    /** @var resource */
-    private $canvas;
-
-    public function __construct(array $config)
+    public function __construct(Config $config)
     {
-        $this->config = new Config($config);
-
-        $this->config->use_background_image ? $this->createFromImage() : $this->createFromColor();
+        $this->config = $config;
     }
 
-    private function createFromImage(): self
+    private function setCanvas(): self
     {
-        $this->canvas = imagecreatefrompng(
-            Random::value(Directory::files($this->config->assets_dir.'backgrounds', '.png'))
-        );
-
-        $this->resize();
+        $this->config->isUseBackgroundImage()
+            ? $this->setCanvasFromPng()->resize()
+            : $this->setCanvasFromColor();
 
         return $this;
     }
 
-    private function resize(): self
+    private function setCanvasFromPng(): self
     {
-        $dst_w = $this->config->width;
-        $dst_h = $this->config->height;
+        $this->canvas = imagecreatefrompng(
+            Random::value(Directory::files($this->config->getAssetsDir().DIRECTORY_SEPARATOR.'backgrounds', '.png'))
+        );
+
+        return $this;
+    }
+
+    private function resize(): void
+    {
+        $dst_w = $this->config->getWidth();
+        $dst_h = $this->config->getHeight();
         $src_w = imagesx($this->canvas);
         $src_h = imagesy($this->canvas);
 
@@ -39,16 +47,12 @@ final class Image
             imagecopyresampled($dst_image, $this->canvas, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h);
             $this->canvas = $dst_image;
         }
-
-        return $this;
     }
 
-    private function createFromColor(): self
+    private function setCanvasFromColor(): void
     {
-        $this->canvas = imagecreatetruecolor($this->config->width, $this->config->height);
-        imagefill($this->canvas, 0, 0, $this->getColor($this->config->background_color));
-
-        return $this;
+        $this->canvas = imagecreatetruecolor($this->config->getWidth(), $this->config->getHeight());
+        imagefill($this->canvas, 0, 0, $this->getColor($this->config->getBackgroundColor()));
     }
 
     private function getColor(string $code = ''): int
@@ -72,8 +76,7 @@ final class Image
         int $size,
         string $color,
         int $angle
-    ): self
-    {
+    ): void {
         $box = imagettfbbox($size, $angle, $font, $text);
 
         $min_x = min($box[0], $box[2], $box[4], $box[6]);
@@ -82,52 +85,50 @@ final class Image
         $min_y = min($box[1], $box[3], $box[5], $box[7]);
         $max_y = max($box[1], $box[3], $box[5], $box[7]);
 
-        $width  = $max_x - $min_x;
+        $width = $max_x - $min_x;
         $height = $max_y - $min_y;
 
         $x = $left - $min_x + Random::margin($space_x, $width);
         $y = $space_y - $max_y - Random::margin($space_y, $height);
 
         imagettftext($this->canvas, $size, $angle, $x, $y, $this->getColor($color), $font, $text);
+    }
+
+    private function addRandomText(): self
+    {
+        $this->text = '';
+        $width = intval($this->config->getWidth() / $this->config->getLength());
+        $fonts = Directory::files($this->config->getAssetsDir().DIRECTORY_SEPARATOR.'fonts', '.ttf');
+
+        for ($i = 0; $i < $this->config->getLength(); $i++) {
+            $this->addText(
+                $width * $i,
+                $width,
+                $this->config->getHeight(),
+                $char = Random::char($this->config->getCharacters()),
+                Random::value($fonts),
+                Random::size($this->config->getHeight()),
+                Random::value($this->config->getColors()),
+                Random::angle($this->config->getRotationAngle())
+            );
+
+            $this->text .= $char;
+        }
 
         return $this;
     }
 
-    public function addRandomText(): string
+    private function addRandomLines(): self
     {
-        $text  = '';
-        $width = intval($this->config->width / $this->config->length);
-        $fonts = Directory::files($this->config->assets_dir.'fonts', '.ttf');
-
-        for ($i = 0; $i < $this->config->length; $i++) {
-            $this->addText(
-                $width * $i,
-                $width,
-                $this->config->height,
-                $char = Random::char($this->config->characters),
-                Random::value($fonts),
-                Random::size($this->config->height),
-                Random::value($this->config->colors),
-                Random::angle($this->config->angle)
-            );
-
-            $text .= $char;
-        }
-
-        return $text;
-    }
-
-    public function addRandomLines(): self
-    {
-        for ($i = 0; $i < $this->config->lines; $i++) {
+        for ($i = 0; $i < $this->config->getLines(); $i++) {
             imageline(
                 $this->canvas,
-                Random::number($this->config->width),
-                Random::number($this->config->height),
-                Random::number($this->config->width),
-                Random::number($this->config->height),
+                Random::number($this->config->getWidth()),
+                Random::number($this->config->getHeight()),
+                Random::number($this->config->getWidth()),
+                Random::number($this->config->getHeight()),
                 $this->getColor(
-                    Random::value($this->config->colors)
+                    Random::value($this->config->getColors())
                 )
             );
         }
@@ -135,20 +136,20 @@ final class Image
         return $this;
     }
 
-    public function addContrast(): self
+    private function addContrast(): self
     {
-        if ($this->config->contrast <> 0) {
-            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->contrast);
+        if ($this->config->getContrast() <> 0) {
+            imagefilter($this->canvas, IMG_FILTER_CONTRAST, $this->config->getContrast());
         }
 
         return $this;
     }
 
-    public function addSharpness(): self
+    private function addSharpness(): self
     {
-        if ($this->config->sharpen) {
-            $min = $this->config->sharpen >= 10 ? $this->config->sharpen * -0.01 : 0;
-            $max = $this->config->sharpen * -0.025;
+        if ($this->config->getSharpness() > Config::SHARPNESS_NO_CHANGE) {
+            $min = $this->config->getSharpness() >= 10 ? $this->config->getSharpness() * -0.01 : 0;
+            $max = $this->config->getSharpness() * -0.025;
             $abs = ((4 * $min + 4 * $max) * -1) + 1;
             $div = 1;
 
@@ -164,20 +165,32 @@ final class Image
         return $this;
     }
 
-    public function addInversion(): self
+    private function addInversion(): self
     {
-        if ($this->config->invert) {
+        if ($this->config->isInvert()) {
             imagefilter($this->canvas, IMG_FILTER_NEGATE);
         }
 
         return $this;
     }
 
-    public function addBlur(): self
+    private function addBlur(): self
     {
-        for ($i = 0; $i < intval($this->config->blur); $i++) {
+        for ($i = 0; $i < $this->config->getBlur(); $i++) {
             imagefilter($this->canvas, IMG_FILTER_GAUSSIAN_BLUR);
         }
+
+        return $this;
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    public function make(): self
+    {
+        $this->setCanvas()->addRandomText()->addRandomLines()->addContrast()->addSharpness()->addInversion()->addBlur();
 
         return $this;
     }
@@ -185,7 +198,7 @@ final class Image
     public function toPng(): string
     {
         ob_start();
-        imagepng($this->canvas, null, $this->config->compression);
+        imagepng($this->canvas, null, $this->config->getCompression());
         $data = ob_get_contents();
         ob_end_clean();
 

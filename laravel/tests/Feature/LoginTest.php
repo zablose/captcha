@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Session;
 use Tests\FeatureTestCase;
-use Zablose\Captcha\Captcha;
 
 class LoginTest extends FeatureTestCase
 {
@@ -13,19 +14,25 @@ class LoginTest extends FeatureTestCase
     {
         $user = $this->createUser();
 
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
-        Session::put('captcha', [
-            'sensitive' => $captcha->isSensitive(),
-            'hash' => $captcha->hash(),
-        ]);
+        Session::put(
+            'captcha',
+            [
+                'sensitive' => $captcha->isSensitive(),
+                'hash' => $captcha->hash(),
+            ]
+        );
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-                'captcha' => $captcha->getCode(),
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => $captcha->getCode(),
+                ]
+            )
             ->assertRedirect();
 
         $this->get('/home')->assertOk();
@@ -37,10 +44,34 @@ class LoginTest extends FeatureTestCase
         $user = $this->createUser();
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                ]
+            )
+            ->assertRedirect();
+
+        $this
+            ->get('/home')
+            ->assertRedirect();
+    }
+
+    /** @test */
+    public function fail_without_captcha_in_session()
+    {
+        $user = $this->createUser();
+
+        $this
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => 'captcha',
+                ]
+            )
             ->assertRedirect();
 
         $this
@@ -53,19 +84,25 @@ class LoginTest extends FeatureTestCase
     {
         $user = $this->createUser();
 
-        $captcha = new Captcha();
+        $captcha = $this->makeCaptcha();
 
-        Session::put('captcha', [
-            'sensitive' => $captcha->isSensitive(),
-            'hash' => $captcha->hash(),
-        ]);
+        Session::put(
+            'captcha',
+            [
+                'sensitive' => $captcha->isSensitive(),
+                'hash' => $captcha->hash(),
+            ]
+        );
 
         $this
-            ->post('/login', [
-                'email' => $user->email,
-                'password' => 'password',
-                'captcha' => $captcha->getCode().'xyz',
-            ])
+            ->post(
+                '/login',
+                [
+                    'email' => $user->email,
+                    'password' => 'password',
+                    'captcha' => $captcha->getCode().'xyz',
+                ]
+            )
             ->assertRedirect();
 
         $this
