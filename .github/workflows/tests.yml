@@ -1,4 +1,4 @@
-name: Testing with Laravel
+name: tests
 
 on:
   push:
