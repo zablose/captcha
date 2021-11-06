@@ -1,6 +1,6 @@
 # Captcha
 
-[![Build Status](https://travis-ci.org/zablose/captcha.svg?branch=master)](https://travis-ci.org/zablose/captcha)
+![](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg)
 
 Simple captcha with optional goodies for Laravel.
 
