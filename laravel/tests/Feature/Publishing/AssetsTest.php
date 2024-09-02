@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Feature\Publishing;
 
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FeatureTestCase;
 use Zablose\Captcha\CaptchaServiceProvider;
 use Zablose\Captcha\Config;
 
 class AssetsTest extends FeatureTestCase
 {
-    /** @test */
+    #[Test]
     public function is_publishable(): void
     {
         $assets_dir = resource_path(Config::ASSETS_PATH);

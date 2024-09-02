@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use Illuminate\Support\Facades\Session;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FeatureTestCase;
 
 class LoginTest extends FeatureTestCase
 {
-    /** @test */
+    #[Test]
     public function login_with_captcha()
     {
         $user = $this->createUser();
@@ -38,7 +39,7 @@ class LoginTest extends FeatureTestCase
         $this->get('/home')->assertOk();
     }
 
-    /** @test */
+    #[Test]
     public function fail_without_captcha()
     {
         $user = $this->createUser();
@@ -58,7 +59,7 @@ class LoginTest extends FeatureTestCase
             ->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function fail_without_captcha_in_session()
     {
         $user = $this->createUser();
@@ -79,7 +80,7 @@ class LoginTest extends FeatureTestCase
             ->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function fail_if_captcha_is_wrong()
     {
         $user = $this->createUser();

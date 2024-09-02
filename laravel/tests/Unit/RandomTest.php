@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\UnitTestCase;
 use Zablose\Captcha\Random;
 
 class RandomTest extends UnitTestCase
 {
-    /** @test */
+    #[Test]
     public function string_gives_string()
     {
         $this->assertTrue(
@@ -17,7 +18,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_random_string()
     {
         $this->assertTrue(
@@ -25,7 +26,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_custom_length_string()
     {
         $this->assertTrue(
@@ -33,7 +34,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_twelve_characters_long_string_by_default()
     {
         $this->assertTrue(
@@ -41,7 +42,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_same_string_if_characters_set_is_one_character_long()
     {
         $this->assertTrue(
@@ -49,7 +50,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_empty_string_if_characters_set_is_empty()
     {
         $this->assertTrue(
@@ -57,7 +58,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_empty_string_if_length_set_to_zero()
     {
         $this->assertTrue(
@@ -65,7 +66,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_gives_empty_string_if_length_is_negative()
     {
         $this->assertTrue(
@@ -73,7 +74,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function string_do_not_lowercase_string()
     {
         $this->assertTrue(
@@ -81,7 +82,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function lower_gives_lowercase_string()
     {
         $this->assertTrue(
@@ -89,7 +90,7 @@ class RandomTest extends UnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function lower_gives_empty_string_if()
     {
         $this->assertTrue(
