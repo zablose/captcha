@@ -5,7 +5,7 @@ services:
     build:
       context: ./docker-damp/
       dockerfile: ./docker/files/rsyslog.df
-    image: zablose-rsyslog:3.11
+    image: zablose-rsyslog:3.19.1
     container_name: captcha-rsyslog
     ports:
       - '${DAMP_PORT_SYSLOG}:514'
@@ -23,7 +23,7 @@ services:
         - ARG_USER_ID=${DAMP_USER_ID}
         - ARG_USER_NAME=${DAMP_USER_NAME}
         - ARG_WEB_DIR=${DAMP_WEB_DIR}
-    image: zablose-damp:10.8-php8.0
+    image: zablose-damp:12.6-php8.3
     container_name: captcha-damp
     ports:
       - '${DAMP_PORT_HTTP}:80'
