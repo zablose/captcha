@@ -1,7 +1,9 @@
 # Captcha
 
-![Tests on Master](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=master)
-![Tests on Dev](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=dev)
+| Branch | Status |
+| --- | --- |
+| Master | ![](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=master) |
+| Dev | ![Tests on Dev](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=dev) |
 
 Simple captcha with optional goodies for Laravel.
 
