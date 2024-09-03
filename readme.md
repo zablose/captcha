@@ -1,7 +1,5 @@
-| Branch | Status |
-| --- | --- |
-| Master | ![](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=master) |
-| Dev | ![](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=dev) |
+![](https://github.com/zablose/captcha/actions/workflows/tests-on-master.yml/badge.svg)
+![](https://github.com/zablose/captcha/actions/workflows/tests-on-dev.yml/badge.svg)
 
 # Captcha
 

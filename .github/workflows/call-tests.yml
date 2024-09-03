@@ -1,17 +1,8 @@
-name: tests
-
 on:
-  push:
-    branches:
-      - master
-      - dev
-  pull_request:
-    branches:
-      - master
+  workflow_call:
 
 jobs:
   testing:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install PHP "${{ matrix.php-versions }}"
         uses: shivammathur/setup-php@v2
