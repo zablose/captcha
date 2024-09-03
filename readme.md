@@ -1,6 +1,7 @@
 # Captcha
 
-![](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg)
+![Tests on Master](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=master)
+![Tests on Dev](https://github.com/zablose/captcha/actions/workflows/tests.yml/badge.svg?branch=dev)
 
 Simple captcha with optional goodies for Laravel.
 
