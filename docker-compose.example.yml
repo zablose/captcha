@@ -1,0 +1,122 @@
+services:
+
+  captcha-nginx:
+    image: zablose/nginx:1.27
+    build:
+      context: ./zdi/
+      dockerfile: files/nginx.df
+      args:
+        - ARG_DIR_WEB=${ZDI_DIR_WEB}
+        - ARG_ENV=${ZDI_ENV}
+        - ARG_TIMEZONE=${ZDI_TIMEZONE}
+        - ARG_USER_GROUP_ID=${ZDI_USER_GROUP_ID}
+        - ARG_USER_GROUP_NAME=${ZDI_USER_GROUP_NAME}
+        - ARG_USER_ID=${ZDI_USER_ID}
+        - ARG_USER_NAME=${ZDI_USER_NAME}
+    container_name: captcha-nginx
+    environment:
+      ZDI_CONTAINER_NAME: captcha-nginx
+      ZDI_PHP_FPM_HOST: captcha-php-fpm
+    ports:
+      - '${ZDI_HOST_IP}:80:80'
+      - '${ZDI_HOST_IP}:443:443'
+    volumes:
+      - ./.env:/home/.env
+      - ./:${ZDI_DIR_WEB}/
+    logging:
+      driver: syslog
+      options:
+        syslog-address: 'tcp://${ZDI_HOST_IP}:514'
+        tag: 'docker/captcha-nginx'
+    depends_on:
+      - captcha-php-fpm
+      - captcha-rsyslog
+    networks:
+      - default
+
+  captcha-php-fpm:
+    image: zablose/php-fpm:${ZDI_VERSION_PHP}
+    build:
+      context: ./zdi/
+      dockerfile: files/php-fpm.df
+      args:
+        - ARG_ADD_COMPOSER=${ZDI_ADD_COMPOSER}
+        - ARG_ADD_LARAVEL=${ZDI_ADD_LARAVEL}
+        - ARG_DIR_WEB=${ZDI_DIR_WEB}
+        - ARG_ENV=${ZDI_ENV}
+        - ARG_TIMEZONE=${ZDI_TIMEZONE}
+        - ARG_USER_GROUP_ID=${ZDI_USER_GROUP_ID}
+        - ARG_USER_GROUP_NAME=${ZDI_USER_GROUP_NAME}
+        - ARG_USER_ID=${ZDI_USER_ID}
+        - ARG_USER_NAME=${ZDI_USER_NAME}
+        - ARG_VERSION_COMPOSER=${ZDI_VERSION_COMPOSER}
+        - ARG_VERSION_PHP=${ZDI_VERSION_PHP}
+    container_name: captcha-php-fpm
+    environment:
+      ZDI_CONTAINER_NAME: captcha-php-fpm
+      ZDI_DB_HOSTNAME: captcha-mariadb
+    volumes:
+      - ./.env:/home/.env
+      - $HOME/.composer/cache/:/home/${ZDI_USER_NAME}/.composer/cache/
+      - ./:${ZDI_DIR_WEB}/
+      - ./post-setup.sh:/home/${ZDI_USER_NAME}/post-setup.sh
+    logging:
+      driver: syslog
+      options:
+        syslog-address: 'tcp://${ZDI_HOST_IP}:514'
+        tag: 'docker/captcha-php-fpm'
+    depends_on:
+      - captcha-mariadb
+      - captcha-rsyslog
+    networks:
+      - default
+
+  captcha-mariadb:
+    image: zablose/mariadb:10.11.6
+    build:
+      context: ./zdi/
+      dockerfile: files/mariadb.df
+      args:
+        - ARG_ENV=${ZDI_ENV}
+        - ARG_TIMEZONE=${ZDI_TIMEZONE}
+        - ARG_USER_GROUP_ID=${ZDI_USER_GROUP_ID}
+        - ARG_USER_GROUP_NAME=${ZDI_USER_GROUP_NAME}
+        - ARG_USER_ID=${ZDI_USER_ID}
+        - ARG_USER_NAME=${ZDI_USER_NAME}
+    container_name: captcha-mariadb
+    environment:
+      ZDI_CONTAINER_NAME: captcha-mariadb
+    logging:
+      driver: syslog
+      options:
+        syslog-address: 'tcp://${ZDI_HOST_IP}:514'
+        tag: 'docker/captcha-mariadb'
+    volumes:
+      - ./.env:/home/.env
+      - captcha_db:/var/lib/mysql/
+    depends_on:
+      - captcha-rsyslog
+    networks:
+      - default
+
+  captcha-rsyslog:
+    image: zablose/rsyslog:3.19.1
+    build:
+      context: ./zdi/
+      dockerfile: files/rsyslog.df
+    container_name: captcha-rsyslog
+    ports:
+      - '${ZDI_HOST_IP}:514:514'
+    volumes:
+      - ./laravel/storage/logs/:/var/log/
+    networks:
+      - default
+
+volumes:
+  captcha_db:
+
+networks:
+  default:
+    name: zdev_default
+    driver: bridge
+    external: true
