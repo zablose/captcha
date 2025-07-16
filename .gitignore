@@ -1,8 +1,6 @@
-/.phpunit.cache/
-/coverage-report/
+/.phpunit/
 /vendor/
 /.idea/
 /.env
-/.phpunit.result.cache
 /composer.lock
 /docker-compose.yml

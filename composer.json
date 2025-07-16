@@ -22,13 +22,13 @@
     },
     "require-dev": {
         "ext-pdo": "*",
-        "fakerphp/faker": "^1.16.0",
-        "laravel/framework": "^11.21.0",
-        "laravel/tinker": "^v2.9.0",
-        "laravel/ui": "^4.5",
+        "fakerphp/faker": "^1.24.1",
+        "laravel/framework": "^12.20.0",
+        "laravel/tinker": "^2.10.1",
+        "laravel/ui": "^4.6.1",
         "mockery/mockery": "^1.6.12",
-        "nunomaduro/collision": "^8.4.0",
-        "phpunit/phpunit": "^11.3.1"
+        "nunomaduro/collision": "^8.8.2",
+        "phpunit/phpunit": "^11.5.27"
     },
     "autoload": {
         "psr-4": {
