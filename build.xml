@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="captcha" default="cleanup">
+
+    <target name="cleanup" description="Delete generated folders and files.">
+        <delete dir="./.phpunit" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete>
+            <fileset dir="./laravel/config" errorOnMissingDir="false">
+                <include name="captcha.php" />
+            </fileset>
+            <fileset dir="./laravel/storage/logs" errorOnMissingDir="false">
+                <include name="*.log" />
+            </fileset>
+        </delete>
+        <exec executable="php" passthru="yes">
+            <arg line="laravel/artisan optimize:clear"/>
+        </exec>
+    </target>
+
+    <target name="prepare" description="Prepare to be released.">
+        <delete dir="./.github" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete dir="./laravel" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete dir="./zdi" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete dir="./readme" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete file=".gitmodules" />
+        <delete>
+            <fileset dir=".">
+                <include name=".env.example" />
+                <include name="build.xml" />
+                <include name="docker-compose.example.yml" />
+                <include name="license" />
+                <include name="phpunit.xml" />
+                <include name="post-setup.sh" />
+                <include name="readme.md" />
+            </fileset>
+        </delete>
+    </target>
+
+</project>
