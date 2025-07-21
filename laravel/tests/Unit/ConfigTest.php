@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Unit;
 
-use Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Zablose\Captcha\Tests\Laravel\Tests\UnitTestCase;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Exception\HeightIsOutOfRangeException;
 use Zablose\Captcha\Exception\LengthIsOutOfRangeException;
@@ -19,7 +21,7 @@ use Zablose\Captcha\Exception\WidthIsOutOfRangeException;
 
 class ConfigTest extends UnitTestCase
 {
-    public function exceptions_triggered_by_wrong_configs(): array
+    public static function exceptions_triggered_by_wrong_configs(): array
     {
         return [
             [
@@ -89,11 +91,8 @@ class ConfigTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider exceptions_triggered_by_wrong_configs()
-     */
+    #[Test]
+    #[DataProvider('exceptions_triggered_by_wrong_configs')]
     public function validation_fails_if_config_is_wrong(string $exception, array $config)
     {
         $this->expectException($exception);

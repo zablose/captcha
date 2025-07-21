@@ -1,0 +1,37 @@
+on:
+  workflow_call:
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-versions: [ '8.2', '8.3' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PHP "${{ matrix.php-versions }}"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Install dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Generate key
+        run: php laravel/artisan key:generate
+
+      - name: Directory permissions
+        run: chmod -R 777 laravel/storage laravel/bootstrap/cache
+
+      - name: Run PHPUnit tests
+        run: php vendor/bin/phpunit --no-coverage --coverage-text=php://stdout

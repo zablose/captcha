@@ -1,0 +1,10 @@
+name: Tests on Dev
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  testing:
+    uses: ./.github/workflows/call-tests.yml

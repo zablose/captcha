@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Zablose\Captcha\Tests\Laravel\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tests\Traits\makeCaptcha;
+use Zablose\Captcha\Tests\Laravel\Tests\Traits\MakeCaptcha;
 use Zablose\Captcha\Config;
 
 abstract class UnitTestCase extends TestCase
 {
-    use makeCaptcha;
+    use MakeCaptcha;
 
     protected function assertCaptcha(array $config = [], string $message = ''): void
     {

@@ -2,25 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Feature;
 
-use Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Zablose\Captcha\Tests\Laravel\Tests\FeatureTestCase;
 
 class RoutesTest extends FeatureTestCase
 {
-    /** @test */
+    #[Test]
     public function index()
     {
         $this->get('/')->assertOk()->assertSee('Welcome');
     }
 
-    /** @test */
+    #[Test]
     public function home()
     {
         $this->get('/home')->assertRedirect('/login');
     }
 
-    /** @test */
+    #[Test]
     public function home_with_authorized_user()
     {
         $this->actingAs($this->createUser());
@@ -30,7 +31,7 @@ class RoutesTest extends FeatureTestCase
             ->assertSee('You are logged in!');
     }
 
-    /** @test */
+    #[Test]
     public function login()
     {
         $this->get('/login')->assertOk()
@@ -39,7 +40,7 @@ class RoutesTest extends FeatureTestCase
             ->assertSee('Captcha');
     }
 
-    /** @test */
+    #[Test]
     public function register()
     {
         $this->get('/register')->assertOk()
@@ -49,13 +50,13 @@ class RoutesTest extends FeatureTestCase
             ->assertSee('Confirm Password');
     }
 
-    /** @test */
+    #[Test]
     public function logout()
     {
         $this->post('/logout')->assertRedirect('/');
     }
 
-    /** @test */
+    #[Test]
     public function captcha()
     {
         $types = [

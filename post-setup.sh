@@ -2,14 +2,43 @@
 
 set -e
 
-cd ${DAMP_WEB_DIR}
-php /home/${DAMP_USER_NAME}/bin/composer update
+bin=/usr/local/bin
 
-cd ${DAMP_WEB_APP}
-php artisan key:generate --ansi
-php artisan vendor:publish --provider="Zablose\Captcha\CaptchaServiceProvider" --tag=config
-php artisan vendor:publish --provider="Zablose\Captcha\CaptchaServiceProvider" --tag=assets
-php artisan migrate
+. "${bin}/exit-if-root"
+. "${bin}/functions.sh"
+. "${bin}/source-env-file"
 
-cd ${DAMP_WEB_DIR}
-php vendor/bin/phpunit
+dir_web=${ZDI_DIR_WEB}
+dir_app=${ZDI_DIR_WEB_APP}
+user=${ZDI_USER_NAME}
+
+user_home=/home/${user}
+user_bin=${user_home}/bin
+composer=${user_bin}/composer
+log=/var/log/zdi-post-setup-php-fpm.log
+
+. "${user_bin}/functions.sh"
+
+{
+    show_info 'Php-fpm post setup.'
+
+    bash "${user_bin}/r-web"
+
+    cd "${dir_web}"
+    ${composer} install
+
+    pushd "${dir_app}"
+    php artisan key:generate --ansi
+    php artisan vendor:publish --provider="Zablose\Captcha\CaptchaServiceProvider" --tag=config
+    php artisan vendor:publish --provider="Zablose\Captcha\CaptchaServiceProvider" --tag=assets
+
+    wait_for_db
+
+    php artisan migrate:fresh
+
+    popd
+    php -d zend_extension=xdebug.so -d xdebug.mode=coverage vendor/bin/phpunit
+
+    show_success "Php-fpm post setup complete. Log file '${log}'."
+
+} 2>&1 | sudo tee ${log}

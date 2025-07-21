@@ -1,20 +1,17 @@
 <?php
 
-namespace Tests;
+declare(strict_types=1);
 
-use App\Application;
+namespace Zablose\Captcha\Tests\Laravel\Tests;
+
+use Zablose\Captcha\Tests\Laravel\App\Application;
 use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication
 {
-    /**
-     * Creates the application.
-     *
-     * @return Application
-     */
-    public function createApplication()
+    public function createApplication(): Application
     {
-        $app = require __DIR__.'/../bootstrap/app.php';
+        $app = require dirname(__DIR__).'/bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 

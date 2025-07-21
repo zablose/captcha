@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Publishing;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Feature\Publishing;
 
 use Illuminate\Support\Facades\File;
-use Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use Zablose\Captcha\Tests\Laravel\Tests\FeatureTestCase;
 use Zablose\Captcha\CaptchaServiceProvider;
 use Zablose\Captcha\Config;
 
@@ -18,7 +19,7 @@ class ConfigTest extends FeatureTestCase
         $this->artisan('config:clear');
     }
 
-    /** @test */
+    #[Test]
     public function is_publishable(): void
     {
         $config = config_path('captcha.php');
@@ -32,7 +33,7 @@ class ConfigTest extends FeatureTestCase
         $this->assertTrue(File::exists($config));
     }
 
-    /** @test */
+    #[Test]
     public function is_readable(): void
     {
         $this->assertEquals(Config::CHARACTERS, config('captcha.default.characters'));

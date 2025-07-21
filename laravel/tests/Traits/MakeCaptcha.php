@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Traits;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Traits;
 
 use Zablose\Captcha\Captcha;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Image;
 
-trait makeCaptcha
+trait MakeCaptcha
 {
     protected function makeCaptcha(array $config = []): Captcha
     {
