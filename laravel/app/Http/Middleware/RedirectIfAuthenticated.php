@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware;
+namespace Zablose\Captcha\Tests\Laravel\App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

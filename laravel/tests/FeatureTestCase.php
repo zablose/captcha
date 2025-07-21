@@ -1,19 +1,20 @@
 <?php
 
-namespace Tests;
+declare(strict_types=1);
 
-use App\Models\User;
+namespace Zablose\Captcha\Tests\Laravel\Tests;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase;
-use Tests\Traits\makeCaptcha;
+use Zablose\Captcha\Tests\Laravel\App\Models\User;
+use Zablose\Captcha\Tests\Laravel\Tests\Traits\MakeCaptcha;
 
 abstract class FeatureTestCase extends TestCase
 {
     use CreatesApplication;
     use DatabaseMigrations;
-    use makeCaptcha;
+    use MakeCaptcha;
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
     protected function createUser(array $attributes = []): User
     {
         return User::factory()->create($attributes);

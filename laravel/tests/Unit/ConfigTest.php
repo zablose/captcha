@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\UnitTestCase;
+use Zablose\Captcha\Tests\Laravel\Tests\UnitTestCase;
 use Zablose\Captcha\Config;
 use Zablose\Captcha\Exception\HeightIsOutOfRangeException;
 use Zablose\Captcha\Exception\LengthIsOutOfRangeException;

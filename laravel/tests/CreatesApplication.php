@@ -1,8 +1,10 @@
 <?php
 
-namespace Tests;
+declare(strict_types=1);
 
-use App\Application;
+namespace Zablose\Captcha\Tests\Laravel\Tests;
+
+use Zablose\Captcha\Tests\Laravel\App\Application;
 use Illuminate\Contracts\Console\Kernel;
 
 trait CreatesApplication

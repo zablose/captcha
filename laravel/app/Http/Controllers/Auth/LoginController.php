@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace Zablose\Captcha\Tests\Laravel\App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Zablose\Captcha\Tests\Laravel\App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 

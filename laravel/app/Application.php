@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Zablose\Captcha\Tests\Laravel\App;
 
 class Application extends \Illuminate\Foundation\Application
 {

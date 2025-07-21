@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
-use Tests\UnitTestCase;
+use Zablose\Captcha\Tests\Laravel\Tests\UnitTestCase;
 use Zablose\Captcha\Random;
 
 class RandomTest extends UnitTestCase

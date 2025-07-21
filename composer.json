@@ -38,9 +38,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "laravel/app/",
-            "Database\\Factories\\": "laravel/database/factories/",
-            "Tests\\": "laravel/tests/"
+            "Zablose\\Captcha\\Tests\\Laravel\\App\\": "laravel/app/",
+            "Zablose\\Captcha\\Tests\\Laravel\\Database\\Factories\\": "laravel/database/factories/",
+            "Zablose\\Captcha\\Tests\\Laravel\\Tests\\": "laravel/tests/"
         }
     },
     "extra": {

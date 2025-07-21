@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Publishing;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Feature\Publishing;
 
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\FeatureTestCase;
+use Zablose\Captcha\Tests\Laravel\Tests\FeatureTestCase;
 use Zablose\Captcha\CaptchaServiceProvider;
 use Zablose\Captcha\Config;
 

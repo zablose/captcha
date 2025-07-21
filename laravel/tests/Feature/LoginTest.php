@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Zablose\Captcha\Tests\Laravel\Tests\Feature;
 
 use Illuminate\Support\Facades\Session;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\FeatureTestCase;
+use Zablose\Captcha\Tests\Laravel\Tests\FeatureTestCase;
 
 class LoginTest extends FeatureTestCase
 {
