@@ -17,22 +17,22 @@ composer require zablose/captcha
 
 Check new route is working, by visiting `/captcha` or `/captcha/{type}`.
 
-| Captcha | Type | Dev Link |
-| --- | --- | --- |
-| ![](readme/images/captcha-default.png) | default | [/captcha/default](https://captcha.zdev:44302/captcha/default) |
-| ![](readme/images/captcha-small.png) | small | [/captcha/small](https://captcha.zdev:44302/captcha/small) |
-| ![](readme/images/captcha-invert.png) | invert | [/captcha/invert](https://captcha.zdev:44302/captcha/invert) |
+| Captcha                                  | Type      | Dev Link                                                           |
+|------------------------------------------|-----------|--------------------------------------------------------------------|
+| ![](readme/images/captcha-default.png)   | default   | [/captcha/default](https://captcha.zdev:44302/captcha/default)     |
+| ![](readme/images/captcha-small.png)     | small     | [/captcha/small](https://captcha.zdev:44302/captcha/small)         |
+| ![](readme/images/captcha-invert.png)    | invert    | [/captcha/invert](https://captcha.zdev:44302/captcha/invert)       |
 | ![](readme/images/captcha-sharpness.png) | sharpness | [/captcha/sharpness](https://captcha.zdev:44302/captcha/sharpness) |
-| ![](readme/images/captcha-blur.png) | blur | [/captcha/blur](https://captcha.zdev:44302/captcha/blur) |
-| ![](readme/images/captcha-contrast.png) | contrast | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast) |
-| ![](readme/images/captcha-no-angle.png) | no-angle | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle) |
-| ![](readme/images/captcha-bg-color.png) | bg-color | [/captcha/bg-color](https://captcha.zdev:44302/captcha/bg-color) |
+| ![](readme/images/captcha-blur.png)      | blur      | [/captcha/blur](https://captcha.zdev:44302/captcha/blur)           |
+| ![](readme/images/captcha-contrast.png)  | contrast  | [/captcha/contrast](https://captcha.zdev:44302/captcha/contrast)   |
+| ![](readme/images/captcha-no-angle.png)  | no-angle  | [/captcha/no-angle](https://captcha.zdev:44302/captcha/no-angle)   |
+| ![](readme/images/captcha-bg-color.png)  | bg-color  | [/captcha/bg-color](https://captcha.zdev:44302/captcha/bg-color)   |
 
 Look at the [config](./config/captcha.php) file for more details.
 
 ### Login Form
 
-If standard auth is in use, add captcha to your login form like in
+If standard auth is in use, add captcha to your login form like in the
 [login.blade.php](./laravel/resources/views/auth/login.blade.php) template.
 
 ### Validation
@@ -42,7 +42,7 @@ If standard auth is in use, overwrite method `validateLogin` like in
 
 ## Basic Usage
 
-In case you are not happy Laravel user, you may still use this package.
+In case you are not a happy Laravel user, you may still use this package.
 
 Create captcha, add details to the session and output the image.
 
@@ -91,7 +91,7 @@ Feel the joy and happiness!
 
 ## Development
 
-> Check submodule [readme](https://github.com/zablose/docker-damp/blob/master/readme.md) for more details about
+> Check submodule [readme](https://github.com/zablose/docker-images/blob/master/readme.md) for more details about
 > development environment used.
 
 ### Hosts
@@ -99,8 +99,7 @@ Feel the joy and happiness!
 Append to `/etc/hosts`.
 
 ```
-127.0.0.1       captcha.zdev
-127.0.0.1       www.captcha.zdev
+127.0.0.26       captcha.zdev
 ```
 
 ### Quick Start
@@ -112,16 +111,9 @@ Append to `/etc/hosts`.
     # Copy env file, then ammend it to your needs.
     $ cp .env.example .env
     
-    $ docker-compose -p zdev up -d
+    $ docker compose up -d
     
-    # To see post-script logs, while container is starting.
-    $ tail -f docker-damp/logs/all.log
+    # To "enter" container, using Bash shell.
+    $ docker exec -u debian -it captcha-php-fpm bash
     
-    # To enter container, using Bash shell.
-    $ docker exec -it captcha-damp bash
-    
-    (captcha-damp)$ phpunit
-
-## License
-
-This package is free software distributed under the terms of the MIT license.
+    (captcha-php-fpm)$ phpunit
