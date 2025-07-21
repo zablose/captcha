@@ -4,6 +4,7 @@
 
     <target name="cleanup" description="Delete generated folders and files.">
         <delete dir="./.phpunit" includeemptydirs="true" verbose="true" failonerror="false" />
+        <delete dir="./laravel/resources/vendor" includeemptydirs="true" verbose="true" failonerror="false" />
         <delete>
             <fileset dir="./laravel/config" errorOnMissingDir="false">
                 <include name="captcha.php" />
